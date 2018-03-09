@@ -37,7 +37,7 @@ The reason I stumbled over this in the first place is that when diving into Tabl
 
 </style>
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 
 <script>
 
