@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-10T14:57:31+01:00</updated><id>http://localhost:4000/</id><title type="html">himynameismarcel</title><subtitle>A bit of economics, data and programming.</subtitle><entry><title type="html">A Collapsible Tree with D3.js</title><link href="http://localhost:4000/Collapsible-Tree-With-D3js" rel="alternate" type="text/html" title="A Collapsible Tree with D3.js" /><published>2018-03-02T13:15:36+01:00</published><updated>2018-03-02T13:15:36+01:00</updated><id>http://localhost:4000/Collapsible-Tree-With-D3js</id><content type="html" xml:base="http://localhost:4000/Collapsible-Tree-With-D3js">&lt;p&gt;In this post I will try to describe as clearly as possible the generation of a tree-diagram using the javascript library D3.js.&lt;/p&gt;
+
+&lt;p&gt;The reason I stumbled over this in the first place is that when diving into Tableau we had stumbled over the possibility to create node-tree diagrams. In particular, Jeffrey Shaffer pioneered the generation of such node-tree diagrams in Tableau.&lt;/p&gt;
+
+&lt;div style=&quot;height: 800px; width: 1000;&quot; id=&quot;example&quot;&gt;&lt;/div&gt;
+
+&lt;style&gt;
+
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+&lt;/style&gt;
+
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+var margin = {top: 20, right: 120, bottom: 20, left: 120},
+    width = 960 - margin.right - margin.left,
+    height = 800 - margin.top - margin.bottom;
+
+var i = 0,
+    duration = 750,
+    root;
+
+var tree = d3.layout.tree()
+    .size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select(&quot;div#example&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width + margin.right + margin.left)
+    .attr(&quot;height&quot;, height + margin.top + margin.bottom)
+  .append(&quot;g&quot;)
+    .attr(&quot;transform&quot;, &quot;translate(&quot; + margin.left + &quot;,&quot; + margin.top + &quot;)&quot;);
+
+var data = '{ &quot;name&quot;: &quot;DE45245235&quot;, &quot;children&quot;: [ { &quot;name&quot;: &quot;AT75124&quot;, &quot;size&quot;: 17010 }, { &quot;name&quot;: &quot;DE0473947&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;LU3493424&quot;, &quot;size&quot;: 3534} ] }, { &quot;name&quot;: &quot;AT845654&quot;, &quot;size&quot;: 353 }, { &quot;name&quot;: &quot;DE1234&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;DE98533&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;DE5689&quot;, &quot;size&quot;: 2138}, {&quot;name&quot;: &quot;DE1437934&quot;, &quot;size&quot;: 3824},{&quot;name&quot;: &quot;AT93842&quot;, &quot;size&quot;: 1353}, {&quot;name&quot;: &quot;AT1234083&quot;, &quot;size&quot;: 4665}, {&quot;name&quot;: &quot;LU134739&quot;, &quot;size&quot;: 2649}, {&quot;name&quot;: &quot;DE1243934&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;DE74153&quot;, &quot;size&quot;: 2138}, {&quot;name&quot;: &quot;DE713&quot;, &quot;size&quot;: 3824}, {&quot;name&quot;: &quot;DE14635&quot;, &quot;size&quot;: 763}, {&quot;name&quot;: &quot;AT3542345&quot;, &quot;size&quot;: 5222}, {&quot;name&quot;: &quot;DE8265&quot;, &quot;size&quot;: 7862}, {&quot;name&quot;: &quot;AT9673&quot;, &quot;size&quot;: 8435} ] }, {&quot;name&quot;: &quot;DE097134&quot;, &quot;size&quot;: 4896}, {&quot;name&quot;: &quot;DE13493&quot;, &quot;size&quot;: 763}, {&quot;name&quot;: &quot;AT130943&quot;, &quot;size&quot;: 5222}, {&quot;name&quot;: &quot;DE0932439&quot;, &quot;size&quot;: 7862}, {&quot;name&quot;: &quot;AT09234&quot;, &quot;size&quot;: 8435} ] }, {&quot;name&quot;: &quot;LU964694&quot;, &quot;size&quot;: 1675} ] }, { &quot;name&quot;: &quot;BE8562452&quot;, &quot;size&quot;: 2313 }, { &quot;name&quot;: &quot;DE9834923894&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;DE085324&quot;, &quot;size&quot;: 2042} ] }, { &quot;name&quot;: &quot;DE9459458&quot;, &quot;size&quot;: 6314 }, { &quot;name&quot;: &quot;DE84294839&quot;, &quot;size&quot;: 4614 }, { &quot;name&quot;: &quot;ES234&quot;, &quot;size&quot;: 20859 }, { &quot;name&quot;: &quot;ES237849&quot;, &quot;size&quot;: 4461 }, { &quot;name&quot;: &quot;FR32894&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;FR84394893&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;IT92347923&quot;, &quot;size&quot;: 6725} ] }, {&quot;name&quot;: &quot;FR123&quot;, &quot;size&quot;: 3727}, {&quot;name&quot;: &quot;FR9034&quot;, &quot;size&quot;: 9317}, {&quot;name&quot;: &quot;IT2349&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;IT92347923&quot;, &quot;size&quot;: 6725}, {&quot;name&quot;: &quot;IT347932&quot;, &quot;size&quot;: 3727}, {&quot;name&quot;: &quot;IT65923&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;IT02397493&quot;, &quot;size&quot;: 6725}, {&quot;name&quot;: &quot;IT143234&quot;, &quot;size&quot;: 3727}, {&quot;name&quot;: &quot;IT023947293&quot;, &quot;size&quot;: 9317} ] }, {&quot;name&quot;: &quot;IT134238&quot;, &quot;size&quot;: 12003}, {&quot;name&quot;: &quot;IT9273492&quot;, &quot;size&quot;: 4853}, {&quot;name&quot;: &quot;FR134793&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;IT6832046208&quot;, &quot;size&quot;: 6725}, {&quot;name&quot;: &quot;IT298342398&quot;, &quot;size&quot;: 9317} ] }, {&quot;name&quot;: &quot;IT5793&quot;, &quot;size&quot;: 4864}, {&quot;name&quot;: &quot;ES237432&quot;, &quot;size&quot;: 3174}, {&quot;name&quot;: &quot;FR43242&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;IT023974923&quot;, &quot;size&quot;: 6725}, {&quot;name&quot;: &quot;IT1231738&quot;, &quot;size&quot;: 9317} ] }, {&quot;name&quot;: &quot;IT239479234&quot;, &quot;size&quot;: 12870}, {&quot;name&quot;: &quot;IT7937493&quot;, &quot;size&quot;: 2728}, {&quot;name&quot;: &quot;IT20342&quot;, &quot;size&quot;: 12348}, {&quot;name&quot;: &quot;IT028343&quot;, &quot;size&quot;: 870}, {&quot;name&quot;: &quot;IT09237493&quot;, &quot;size&quot;: 9121}, {&quot;name&quot;: &quot;IT092349&quot;, &quot;size&quot;: 9191} ] }, {&quot;name&quot;: &quot;AT09348&quot;, &quot;size&quot;: 4853}, {&quot;name&quot;: &quot;FR12983742&quot;, &quot;size&quot;: 8411}, {&quot;name&quot;: &quot;IT8403&quot;, &quot;size&quot;: 4864}, {&quot;name&quot;: &quot;ES729347&quot;, &quot;size&quot;: 3174}, {&quot;name&quot;: &quot;FR9104&quot;, &quot;size&quot;: 7881}, {&quot;name&quot;: &quot;FR05634&quot;, &quot;size&quot;: 12870}, {&quot;name&quot;: &quot;FR18348932&quot;, &quot;size&quot;: 2728}, {&quot;name&quot;: &quot;FR09384&quot;, &quot;size&quot;: 12348}, {&quot;name&quot;: &quot;FR12493&quot;, &quot;size&quot;: 870}, {&quot;name&quot;: &quot;US129439&quot;, &quot;size&quot;: 9121}, {&quot;name&quot;: &quot;FR093043&quot;, &quot;size&quot;: 9191} ] }, { &quot;name&quot;: &quot;FR32894&quot;, &quot;size&quot;: 5219 }, { &quot;name&quot;: &quot;GR273847283&quot;, &quot;size&quot;: 9956 }, { &quot;name&quot;: &quot;IE724893&quot;, &quot;size&quot;: 1286 }, { &quot;name&quot;: &quot;IT72384923879&quot;, &quot;children&quot;: [ {&quot;name&quot;: &quot;IT832942&quot;, &quot;size&quot;: 1041}, {&quot;name&quot;: &quot;IT2384932&quot;, &quot;size&quot;: 5593} ] }, { &quot;name&quot;: &quot;IT123123&quot;, &quot;size&quot;: 870 }, { &quot;name&quot;: &quot;LU2352&quot;, &quot;size&quot;: 9191 }, { &quot;name&quot;: &quot;LU65398&quot;, &quot;size&quot;: 2490 }, { &quot;name&quot;: &quot;NL73492&quot;, &quot;size&quot;: 2023 }, { &quot;name&quot;: &quot;PT1313&quot;, &quot;size&quot;: 16540 } ] }';
+
+  root = JSON.parse(data);
+  root.x0 = height / 2;
+  root.y0 = 0;
+
+  function collapse(d) {
+    if (d.children) {
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
+  }
+
+root.children.forEach(collapse);
+update(root);
+
+d3.select(self.frameElement).style(&quot;height&quot;, &quot;800px&quot;);
+
+function update(source) {
+
+  // Compute the new tree layout.
+  var nodes = tree.nodes(root).reverse(),
+      links = tree.links(nodes);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+  // Update the nodes…
+  var node = svg.selectAll(&quot;g.node&quot;)
+      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append(&quot;g&quot;)
+      .attr(&quot;class&quot;, &quot;node&quot;)
+      .attr(&quot;transform&quot;, function(d) { return &quot;translate(&quot; + source.y0 + &quot;,&quot; + source.x0 + &quot;)&quot;; })
+      .on(&quot;click&quot;, click);
+
+  nodeEnter.append(&quot;circle&quot;)
+      .attr(&quot;r&quot;, 1e-6)
+      .style(&quot;fill&quot;, function(d) { return d._children ? &quot;lightsteelblue&quot; : &quot;#fff&quot;; });
+
+  nodeEnter.append(&quot;text&quot;)
+      .attr(&quot;x&quot;, function(d) { return d.children || d._children ? -10 : 10; })
+      .attr(&quot;dy&quot;, &quot;.35em&quot;)
+      .attr(&quot;text-anchor&quot;, function(d) { return d.children || d._children ? &quot;end&quot; : &quot;start&quot;; })
+      .text(function(d) { return d.name; })
+      .style(&quot;fill-opacity&quot;, 1e-6);
+
+  // Transition nodes to their new position.
+  var nodeUpdate = node.transition()
+      .duration(duration)
+      .attr(&quot;transform&quot;, function(d) { return &quot;translate(&quot; + d.y + &quot;,&quot; + d.x + &quot;)&quot;; });
+
+  nodeUpdate.select(&quot;circle&quot;)
+      .attr(&quot;r&quot;, 4.5)
+      .style(&quot;fill&quot;, function(d) { return d._children ? &quot;lightsteelblue&quot; : &quot;#fff&quot;; });
+
+  nodeUpdate.select(&quot;text&quot;)
+      .style(&quot;fill-opacity&quot;, 1);
+
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+      .duration(duration)
+      .attr(&quot;transform&quot;, function(d) { return &quot;translate(&quot; + source.y + &quot;,&quot; + source.x + &quot;)&quot;; })
+      .remove();
+
+  nodeExit.select(&quot;circle&quot;)
+      .attr(&quot;r&quot;, 1e-6);
+
+  nodeExit.select(&quot;text&quot;)
+      .style(&quot;fill-opacity&quot;, 1e-6);
+
+  // Update the links…
+  var link = svg.selectAll(&quot;path.link&quot;)
+      .data(links, function(d) { return d.target.id; });
+
+  // Enter any new links at the parent's previous position.
+  link.enter().insert(&quot;path&quot;, &quot;g&quot;)
+      .attr(&quot;class&quot;, &quot;link&quot;)
+      .attr(&quot;d&quot;, function(d) {
+        var o = {x: source.x0, y: source.y0};
+        return diagonal({source: o, target: o});
+      });
+
+  // Transition links to their new position.
+  link.transition()
+      .duration(duration)
+      .attr(&quot;d&quot;, diagonal);
+
+  // Transition exiting nodes to the parent's new position.
+  link.exit().transition()
+      .duration(duration)
+      .attr(&quot;d&quot;, function(d) {
+        var o = {x: source.x, y: source.y};
+        return diagonal({source: o, target: o});
+      })
+      .remove();
+
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
+    d.x0 = d.x;
+    d.y0 = d.y;
+  });
+}
+
+// Toggle children on click.
+function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+  update(d);
+}
+
+&lt;/script&gt;</content><author><name></name></author><summary type="html">In this post I will try to describe as clearly as possible the generation of a tree-diagram using the javascript library D3.js.</summary></entry><entry><title type="html">A Markdown Crash-Course</title><link href="http://localhost:4000/A-Markdown-Crash-Course" rel="alternate" type="text/html" title="A Markdown Crash-Course" /><published>2018-03-01T13:10:36+01:00</published><updated>2018-03-01T13:10:36+01:00</updated><id>http://localhost:4000/A-Markdown-Crash-Course</id><content type="html" xml:base="http://localhost:4000/A-Markdown-Crash-Course">&lt;p&gt;Markdown-syntax has already crossed my path both when producing reproducible reports using Jupyter and R Markdown notebooks.&lt;/p&gt;
+
+&lt;p&gt;To check it’s features a bit more comprehensively for the sake of my first blog-post (which uses Markdown for the content of each post), I decided to make an exercise out of it and go through the detailed &lt;a href=&quot;https://blog.ghost.org/markdown/&quot;&gt;blog-post&lt;/a&gt; found on &lt;a href=&quot;https://ghost.org/de/&quot;&gt;ghost.org&lt;/a&gt;. The article is called &lt;a href=&quot;https://blog.ghost.org/markdown/&quot;&gt;How to Write Faster, Better &amp;amp; Longer: The Ultimate Guide to Markdown&lt;/a&gt;. Below will find all the snippets that I tried out myself while going through their article:&lt;/p&gt;
+
+&lt;p&gt;The &lt;em&gt;quick&lt;/em&gt; brown fox, jumped &lt;strong&gt;over&lt;/strong&gt; the lazy &lt;a href=&quot;https://en.wikipedia.org/wiki/Dog&quot;&gt;dog&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Porchetta short loin chicken shoulder pork belly swine. Ground round biltong alcatra sausage pastrami kielbasa tenderloin filet mignon frankfurter capicola leberkas beef pig pork belly. Flank pork prosciutto sausage shankle shoulder swine burgdoggen drumstick. Turkey leberkas pancetta meatball porchetta ribeye buffalo sausage corned beef cupim meatloaf. Shoulder picanha burgdoggen spare ribs, kevin pastrami alcatra jowl kielbasa ground round turkey hamburger ribeye andouille tenderloin. Jerky rump kielbasa, pastrami tri-tip salami tenderloin short ribs meatloaf turducken beef ribs tail jowl.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;basic-markdown-formatting&quot;&gt;Basic Markdown Formatting&lt;/h1&gt;
+
+&lt;p&gt;Here are the elements we’ll use most often:&lt;/p&gt;
+&lt;h2 id=&quot;headings&quot;&gt;Headings&lt;/h2&gt;
+
+&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;/h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;/h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;/h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;/h4&gt;
+
+&lt;h2 id=&quot;text&quot;&gt;Text&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;italic&lt;/em&gt;
+&lt;strong&gt;bold&lt;/strong&gt;
+&lt;strong&gt;&lt;em&gt;bold-italic&lt;/em&gt;&lt;/strong&gt;
+&lt;a href=&quot;http://www.orf.at&quot;&gt;link&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;images&quot;&gt;Images&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;http://via.placeholder.com/350x150&quot; alt=&quot;m'lady&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;unordered-lists&quot;&gt;Unordered Lists&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Milk&lt;/li&gt;
+  &lt;li&gt;Bread
+    &lt;ul&gt;
+      &lt;li&gt;Wholegrain&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Butter&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ordered-lists&quot;&gt;Ordered Lists&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Tidy the kitchen&lt;/li&gt;
+  &lt;li&gt;Prepare ingredients&lt;/li&gt;
+  &lt;li&gt;Cook delicious things&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;quotes&quot;&gt;Quotes&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;To be or not to be, that is the question.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;intermediate-markdown-formatting&quot;&gt;Intermediate Markdown Formatting&lt;/h1&gt;
+&lt;h2 id=&quot;horizontal-rules&quot;&gt;Horizontal Rules&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;code-snippets&quot;&gt;Code Snippets&lt;/h2&gt;
+&lt;p&gt;Some text with an inline &lt;code class=&quot;highlighter-rouge&quot;&gt;code&lt;/code&gt; snippet.&lt;/p&gt;
+
+&lt;p&gt;Indenting by &lt;strong&gt;4 spaces&lt;/strong&gt; will turn an entire paragraph into a code-block (further down we will learn how to specify the language for a proper syntax-highlighing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.my-link {
+    text-decoration: underline;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;reference-lists--titles&quot;&gt;Reference Lists &amp;amp; Titles&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;The quick brown &lt;a href=&quot;https://en.wikipedia.org/wiki/Fox&quot; title=&quot;Wikipedia: Fox&quot;&gt;fox&lt;/a&gt;, jumped over the lazy &lt;a href=&quot;https://en.wikipedia.org/wiki/Dog&quot; title=&quot;Wikipedia: Dog&quot;&gt;dog&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Anywhere we use a URL, we can follow it with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;title in quotation marks&quot;&lt;/code&gt; to generate a title attribute.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Dog&quot; title=&quot;Wikipedia: Dog&quot;&gt;Dog&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;escaping&quot;&gt;Escaping&lt;/h2&gt;
+&lt;p&gt;*literally*&lt;/p&gt;
+
+&lt;p&gt;Escaping Markdown characters with a back-slash &lt;code class=&quot;highlighter-rouge&quot;&gt;\&lt;/code&gt; allows us to use any characters which might be getting accidentally converted into HTML.&lt;/p&gt;
+
+&lt;h2 id=&quot;embedding-html&quot;&gt;Embedding HTML&lt;/h2&gt;
+&lt;p&gt;&lt;button class=&quot;button-save large&quot;&gt; Big Fat Button &lt;/button&gt;&lt;/p&gt;
+
+&lt;p&gt;Possibly the coolest feature of Markdown is that it also just supports plain old HTML.&lt;/p&gt;
+
+&lt;p&gt;So we can drop in any HTML, sharing button JavaScript snipped or iFrame we like and it will work on the page just as normal.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;advanced-markdown&quot;&gt;Advanced Markdown&lt;/h1&gt;
+&lt;p&gt;Every example so far has been vanilla, normal Markdown. Those code snippets will work absolutely anywhere which supports Markdown syntax.&lt;/p&gt;
+
+&lt;p&gt;Now we are going to look at some syntax which is &lt;strong&gt;not standard&lt;/strong&gt; to native Markdown (i.e., they are extensions of the language).&lt;/p&gt;
+
+&lt;h2 id=&quot;strike-throughs-we-have-to-use-the-html-way-of-doing-it-here&quot;&gt;Strike-throughs (we have to use the html-way of doing it here)&lt;/h2&gt;
+&lt;s&gt;deleted words&lt;/s&gt;
+
+&lt;h2 id=&quot;highlights-we-have-to-use-the-html-way-of-doing-it-here&quot;&gt;Highlights (we have to use the html-way of doing it here)&lt;/h2&gt;
+&lt;p&gt;&lt;mark&gt;ooooh fancy&lt;/mark&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;automatic-links-works&quot;&gt;Automatic Links (works)&lt;/h2&gt;
+&lt;p&gt;https://ghost.org&lt;/p&gt;
+
+&lt;h2 id=&quot;markdown-footnotes-works&quot;&gt;Markdown Footnotes (works)&lt;/h2&gt;
+&lt;p&gt;The quick brown fox&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; jumped over the lazy dog&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;syntax-highlighting&quot;&gt;Syntax Highlighting&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sqlite3&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Database&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sqlite3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cur&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cursor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cur&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;CREATE TABLE IF NOT EXISTS book (id INTEGER PRIMARY KEY, title text, author text, year integer, isbn integer)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;commit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;# conn.close()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Another example using JavaScript Code:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// This .js-document is part of the udemy-class called &quot;The Complete Web-Developer Bootcamp&quot;.&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PRINT ALL NUMBERS BETWEEN -10 AND 19&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;converting-html-to-markdown&quot;&gt;Converting HTML to Markdown&lt;/h1&gt;
+&lt;p&gt;A &lt;a href=&quot;https://domchristie.github.io/turndown/&quot;&gt;very handy tool&lt;/a&gt; comes from Dom Christie which easily allows you to convert HTML to Markdown.&lt;/p&gt;
+
+&lt;h1 id=&quot;best-markdown-apps&quot;&gt;Best Markdown Apps&lt;/h1&gt;
+&lt;p&gt;Writing in Markdown also easily allows you to export to HTML, PDF, or a wide variety of document types.&lt;/p&gt;
+
+&lt;p&gt;Some of the coolest Markdown editors for Mac, PC, desktop and mobile are:&lt;/p&gt;
+&lt;h2 id=&quot;mac-osx-markdown-editors&quot;&gt;Mac OSX Markdown Editors&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Mou&lt;/li&gt;
+  &lt;li&gt;iA Writer&lt;/li&gt;
+  &lt;li&gt;Desk&lt;/li&gt;
+  &lt;li&gt;ByWord&lt;/li&gt;
+  &lt;li&gt;SublimeText&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;windows-pc-markdown-editors&quot;&gt;Windows PC Markdown Editors&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;WriteMonkey&lt;/li&gt;
+  &lt;li&gt;MarkdownPad&lt;/li&gt;
+  &lt;li&gt;Texts&lt;/li&gt;
+  &lt;li&gt;SublimeText&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;apple-ios-markdown-apps&quot;&gt;Apple iOS Markdown Apps&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Werdsmith&lt;/li&gt;
+  &lt;li&gt;iA Writer&lt;/li&gt;
+  &lt;li&gt;ByWord&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;Foxes are red &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot;&gt;
+      &lt;p&gt;Dogs are usually not red &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">Markdown-syntax has already crossed my path both when producing reproducible reports using Jupyter and R Markdown notebooks.</summary></entry></feed>
