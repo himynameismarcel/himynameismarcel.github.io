@@ -497,7 +497,7 @@ significant, and for `hhkids: yes`, `educ`, `married: yes` and
 `working: yes` the effects are significantly negative (though only on a
 5% significant level for `working: yes`).
 
-![]({{ site.url }}/assets/binarychoice.png)
+![]({{ site.url }}/assets/BinaryChoice.png)
 *Estimation results Logit and Probit.*
 
 #### Interpretation of Parameters
