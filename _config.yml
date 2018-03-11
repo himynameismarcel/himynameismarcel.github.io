@@ -25,7 +25,7 @@ linkedin_username: marcel-kropp-028a17154
 instagram_username: marcel.kay.mavaddat
 
 # Build settings
-markdown: kramdown
+markdown: recarpet
 theme: minima
 plugins:
   - jekyll-feed

@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Binary Choice Models - Some Theory and an Application</title>
+  <meta name="description" content="Abstract In this slightly longer post I want to outline some of the differences in the econometric modeling techniques when the dependent variable is a binar...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/economics/2014/06/20/binary-choice-models.html">
+  <link rel="alternate" type="application/rss+xml" title="himynameismarcel" href="/feed.xml">
+
+  <link rel=”stylesheet” href=””>
+  <script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">himynameismarcel</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Binary Choice Models - Some Theory and an Application</h1>
+    <p class="post-meta">
+      <time datetime="2014-06-20T00:37:05+02:00" itemprop="datePublished">
+        
+        Jun 20, 2014
+      </time>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h1 id="abstract">Abstract</h1>
+<p>In this slightly longer post I want to outline some of the differences in the
+econometric modeling techniques when the dependent variable is a binary
+variable with two distinct outcomes (yes/no, 0/1). We will discuss the
+shortcomings of ordinary least squares (OLS) in these settings and how
+the concept of a conditional expectation function (CEF) is replaced by
+the concept of a conditional probability function (CPF) that gives rise
+to the so called <strong>logit</strong> and <strong>probit</strong> models used for binary responses.
+Within these frameworks, the least squares principle is replaced by
+maximum likelihood estimation, which is <em>the</em> estimation technique
+common to all applications where the response variable is of qualitative
+nature. The theoretical discussion will be complemented with an
+illustrative example.</p>
+
+<h1 id="introduction-and-theory">Introduction and Theory</h1>
+
+<p>Ordinary Least Squares (OLS) is undoubtedly the most frequently used
+estimation technique within the Classical Linear (Regression) Model
+(CLM) to recover a functional and foremost causal relationship between a
+dependent variable of interest \( y \) and explanatory variables
+(regressors) \(x_j \) with \(j = 1, …, k \) by means of parameter
+estimation. But the framework of the CLM underlies certain important
+assumptions for why within this framework the OLS-principle should be
+used only in circumstances where there are good reasons to believe that
+the underlying assumptions are fulfilled.</p>
+
+<p>In many applications the response variable \( y \) we are trying to model is
+available on a continuous (or sufficiently continuous) measurement scale
+and in many instances also (roughly) normally distributed, at least
+after adequate transformations (e.g. log-transformations etc.). But this
+changes if we want to model categorial (or qualitative) variables, which
+are always discrete and can be binary/multinomial/ordered or
+quantitative variables with a restricted range (e.g., counts, durations,
+censored, truncated) that can be both, continuous or discrete. Within
+the class of categorial variables, the models used differ with respect
+to the response variable we are trying to model (hence they are called
+binary, multinomial or ordered response models).<br />
+Binary variables arise from the answer to yes/no questions, multinomial
+extends the binary variables to the setting where we have more than two
+mutually exclusive and exhaustive categories that cannot be ordered and
+finally ordered variables are like multinomial variables but with a
+meaningful ordering of the categories.</p>
+
+<p>The OLS-principle assumes relationships between <em>quantitative</em>
+variables, where the regressors can enter the model also as dummy
+variables and the response is assumed to be continuous. For
+\(i = 1, …, n\), the PRF (population regression function) for the simple
+linear model can be written as</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{eqnarray*}
+y_i & = & \beta_1 + \beta_2 x_{2i} + ... + \beta_k x_{ki} + \epsilon_i \\
+& = & \sum_{j=1}^K\beta_jx_{ji} + \epsilon_i \\
+& = & \mathbf{x_i'\beta} + \epsilon_i.
+\end{eqnarray*} %]]></script>
+
+<p>which can be compactly written as
+<script type="math/tex">\mathbf{y} = \mathbf{X \beta} + \mathbf{\epsilon}.</script> Under the
+Gauß-Markov assumptions which are (1) linearity in parameters, (2) full
+rank of the design matrix, (3) exogeneity of the explanatory variables
+\( E(\mathbf{\epsilon}\vert \mathbf{X})=0 \) and homoscedastic and
+uncorrelated errors, meaning that the variance/covariance matrix simply
+is \( Cov\mathbf{(\epsilon)} = \sigma^2 \mathbf{I} \), the ordinary least
+squares estimator is the best linear unbiased estimator (BLUE) and we
+can rewrite the model in terms of the then correctly specified
+<em>conditional</em> expectation function</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+E(\mathbf{y}\vert \mathbf{X})=\mathbf{X\beta},
+\end{eqnarray*}</script>
+
+<p>i.e., the systematic
+component of our linear regression model describes the conditional
+expectation.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> If, in addition, we assume the errors to be normally
+distributed, inference based on \(t \) and \(F \) tests is exact.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
+
+<p>We could try to apply the least squares principle from above to a binary
+response variable \( y_i \) where the categories are coded with numerical
+values \(0 \) and \( 1 \). And to follow the argumentation it is useful to
+think of the linear regression model in terms of the conditional
+expectation function as specified above. For a binary variable
+(Bernoulli variable) where $p$ is denoted as the "success probability"
+we know that the expectation is
+\(E(y_i) = 0 \cdot P(y_i=0) + 1 \cdot P(y_i=1) = P(y_i=1) =p_i\), i.e.,
+the expectation equals the success probability. And due to
+\(Var(y_i) = E(y_i - E(y_i))^2 = E(y_i^2) - E(y_i)^2\) we get
+\(Var(y_i) = p_i - p_i^2 = p_i(1-p_i)\). If we were to use this in a
+linear regression we would have
+\(P(y = 1|\mathbf{x}) = E(y_i\vert \mathbf{x_i})=\mathbf{x_i’\beta}\) and
+consequently
+\(Var(y_i\vert \mathbf{x_i})=\mathbf{x_i’\beta}(1-\mathbf{x_i’\beta})\).
+The problem with this specification is that
+\(\mathbf{x_i’\hat{\mathbf{\mathbf{\beta}}}}\) (our linear predictor) is
+not restricted and can lead to nonsense predictions, i.e., predictions
+that are outside of the admissible range of [0, 1] and is therefore
+not well suited for modeling the success probability of our response
+variable $y_i$ for a specific individual or entity given a set of
+covariates \(x_{ji}\). In addition,
+\(Var(y_i\vert \mathbf{x_i})=\mathbf{x_i’\beta}(1-\mathbf{x_i’\beta})=p_i(1-p_i)\)
+shows that if \(p_i\) differs across individuals (depending on our linear
+predictor) then also our variance is not constant but is different for
+every individual \(i\), i.e. we have heteroscedasticity.</p>
+
+<p>To overcome the difficulties, a different estimation technique is
+applied, namely Maximum Likelihood Estimation (MLE). In contrast to OLS,
+in MLE the starting point is a parametric distribution of the response
+variable (or the error term) where the parameters are specified as a
+function of the exogenous variables. By modeling the probability
+distribution of a response \(\mathbf{y}\) conditional on regressors
+\(\mathbf{X}\) the emphasis is shifted away from the conditional
+expectation function as in the OLS-framework towards the <strong>conditional
+probability function</strong>. This procedure can be applied to a broader class
+of distributions within the framework of Generalized Linear Models
+(GLMs) which are an extension of the classical linear regression model
+to accommodate both non-normal response distributions and
+transformations to linearity. This framework allows a unified treatment
+of statistical methodology for several important classes of models where
+the response variables have an error distribution out of the class of
+the exponential family which incorporates the Bernoulli, Binomial,
+Poisson, Gamma or inverse Normal distribution etc. The GLM thereby
+allows the linear predictor to be related to the response variable via a
+link function and allows the magnitude of the variance of each
+observation to be a function of its predicted value.<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup></p>
+
+<h4 id="glms">GLMs</h4>
+
+<p>For GLMs the conditional distribution of \(y_i\vert \mathbf{x_i}\) is
+given by a density of the following type</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+f(y; \theta, \phi)=exp\left(\frac{y\theta-b(\theta)}{\phi}+c(y, \phi)\right)
+\end{eqnarray*}</script>
+
+<p>where \( b(.) \) and \( c(.) \) are known functions and \( \theta \) and \( \phi \) are
+the so-called canonical and dispersion parameter.<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup> By appropriately
+choosing \(b(.)\) and \(c(.)\) it is possible to generate the different
+distributions (normal, binomial, Poisson, …). <br />
+To generate a regression model based on this exponential family one
+further states the conditional expectation to be
+\( \mu_i=E(y_i\vert \mathbf{x_i}) \) and the linear predictor to be
+\( \eta_i=\mathbf{x_i’\beta} \) which are connected via a monotone
+transformation \( g(\mu_i)=\eta_i=\mathbf{x_i’\beta} \) where \( g(.) \) is
+called <em>link function</em>.<sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup> And because \( g(.) \) is assumed to be a
+monotonic function it is invertible and we can rearrange to get
+\( \mu_i = g^{-1}(\eta_i) = g^{-1}(\mathbf{x_i’\beta}) \). Furthermore,
+\( \theta \) is also an invertible function of \( \mu \) and it can be shown
+that \( E(y_i\vert \mathbf{x_i})=\mu_i=b’(\theta_i) \), which could be
+rearranged to \( \theta_i=(b’)^{-1}(\mu_i) \), and
+\( Var(y_i\vert \mathbf{x_i})=\phi b’’(\theta_i) \). We see that the
+canonical parameter \( \theta \) is connected to our conditional expectation
+\( \mu \) via the function \( b(.) \) and that \( E \) and \( Var \) are not completely
+separated but the variance is, in the general case, a function of \( \phi \)
+and \( \theta \), therefore the variance is also a function of our
+expectation \( \mu \) which is often written down as
+\( Var(y_i\vert \mathbf{x_i})=\phi b’’(\theta(\mu)) \) where
+\( V(\mu)=b’’(\theta(\mu)) \) is called the variance function. If we combine
+all of the above we see that</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+\theta_i = (b')^{-1}(\mu_i)=(b')^{-1}(g^{-1}(\mathbf{x_i' \beta}))
+\end{eqnarray*}</script>
+
+<p>where we see that we have multiple transformations between the linear
+predictor, the conditional expectation and the canonical parameter. In
+the linear regression model we have \( \mathbf{x_i’\beta}=\eta_i=\mu_i=\theta_i \).</p>
+
+<h4 id="a-glm-for-binary-responses">A GLM for Binary Responses</h4>
+
+<p>To pass these concepts on to a Bernoulli-distributed random variable \( y \)
+which takes the value 1 with success probability \( p \) and the value 0
+with probability \( (1-p) \) we can, as a first step, simply write down the
+probability mass function which is</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+f(y;\mu) = \mu^y (1-\mu)^{1-y}\!\quad \text{for }y\in\{0,1\}.
+\end{eqnarray*}</script>
+
+<p>This mass function<sup id="fnref:6"><a href="#fn:6" class="footnote">6</a></sup> can be rewritten to</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{eqnarray*}
+f(y; \mu) & = & \mu^{y} (1-\mu)^{1-y} \\
+              & = & exp \left \{y \cdot log \left ( \frac{\mu}{1-\mu} \right) + log(1 - \mu) \right \}
+\end{eqnarray*} %]]></script>
+
+<p>In this representation we see that \( \phi=1 \) and that \( c(y, \phi) \) is
+also not part of it. Comparing the remaining terms to the general
+representation of GLMs we see that
+\( \theta=log\left(\frac{\mu}{1-\mu}\right) \), i.e. our canonical parameter
+\( \theta \) is a function of our conditional expectation \( \mu \). Here,
+\( \theta \) is said to be the logit transform of  \( \mu \). Solving for \( \mu \)
+we see that \( \mu=\frac{e^\theta}{1+e^\theta} \) and we further get
+\( b(\theta)=-log\left(1-\frac{e^\theta}{1+e^\theta}\right)=…=log(1+e^\theta) \).
+From this we can derive
+\( b’(\theta) = \frac{1}{1 + exp(\theta)} \cdot exp(\theta) = \mu \) and
+after some algebra also the variance function
+\( V(\mu) = b’’(\theta(\mu)) = \mu(1 - \mu) \). By this we can represent the
+variance function as a function of \( \mu \) instead of our canonical
+parameter \( \theta\)<sup id="fnref:7"><a href="#fn:7" class="footnote">7</a></sup>. So we see, that in the Bernoulli-model it holds
+that  \( E[y_i\vert \mathbf{x_i}]=\mu_i=b’(\theta) \) and that
+\( Var[y_i\vert \mathbf{x_i}]=\phi \cdot V(\mu_i)=\phi \cdot b’’(\theta(\mu))=\mu_i(1-\mu_i) \),
+what is exactly what we postulated above. Here we clearly see how the
+conditional expectation \( \mu$ influences our variance.<sup id="fnref:8"><a href="#fn:8" class="footnote">8</a></sup> <br /></p>
+
+<p>In general, each response distribution allows a variety of link functions to connect
+the mean with the linear predictor. In the case of binary dependent
+variables, the two most widely used links are the <em>logit</em> and the
+<em>probit</em> link<sup id="fnref:9"><a href="#fn:9" class="footnote">9</a></sup>. For each response distribution the link function
+\( g=(b’)^{-1}$ for which we get \( \theta \equiv \eta$ is called the
+<em>canonical link</em>. In case of binary responses the two most widely used
+links are the canonical <em>logit</em> or <em>probit</em> link. From above we see that
+\( \theta=(b’)^{-1}(\mu)=log\left(\frac{\mu}{1-\mu}\right) \) and so the
+link function \( g=(b’)^{-1} \) for which we get \( \theta \equiv \eta \) is
+exactly \( log\left(\frac{\mu}{1-\mu}\right) \) because then
+\( \theta = (b’)^{-1} (g^{-1} (\mathbf{x’ \beta})) = \mathbf{x’ \beta} = \eta \).
+By setting \( log\left(\frac{\mu}{1-\mu}\right)=\eta \) we also see that
+\( \frac{\mu}{1-\mu}=exp(\eta) \) and further that
+\( \mu = \frac{\exp(\eta)}{1+exp(\eta)} \).</p>
+
+<p>In the paragraph above we rolled up the field from behind in an attempt
+to show how the relevant quantities naturally arise from a Bernoulli
+distribution. In practice, this is of course known and therefore one can
+immediately summarize the relevant results as follows: a binary
+regression model links the conditional probability that we want to model
+\( \mu_i = P(y_i=1\vert \mathbf{x_i})=E(y_i\vert\mathbf{x_i}) \) to the
+linear predictor \( \eta_i \) via a function \( g^{-1}(.) \) which is a strict
+monotonic increasing distribution function so that
+\( g^{-1}(\eta) \in [0, 1] \) always holds and we have</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+\mu_i=g^{-1}(\eta_i)=g^{-1}(\mathbf{x_i'\beta})
+\end{eqnarray*}</script>
+
+<p>By means of the
+inverse function \( g=(g^{-1})^{-1} \) it holds that
+\( g(\mu_i)=\eta_i=\mathbf{x_1’\beta} \). In the GLM-terminology \( g^{-1}(.) \)
+is called <em>response function</em> and \( g \) is called canonical <em>link
+function</em>. It is important to note that the response function
+\( g^{-1}(.) \) should be chosen such that the linear predictor is mapped to
+the unit interval, i.e. \( g^{-1}:\mathbf{x_i’\beta}\rightarrow[0, 1] \) and
+the link function accordingly maps the unit interval to the real line,
+i.e. \( g:[0, 1] \rightarrow \mathbb{R} \). The logit-model then arises by
+choosing the cumulative distribution function (CDF) of the logistic
+distribution</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+P(y_i = 1) = \mu=g^{-1}(\eta)=\frac{exp(\eta)}{1+exp(\eta)} = \Lambda(\eta)
+\end{eqnarray*}</script>
+
+<p>that ensures that that \( \mu \) is restricted to the interval \( [0,1] \) and
+the corresponding <em>logit-link</em> function then is</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+g(\mu)=log\left(\frac{\mu}{1-\mu}\right)=\eta=\mathbf{x_i'\beta}.
+\end{eqnarray*}</script>
+
+<p>By
+this one generates a linear model in the log-odds (the ratio of success
+probability to the probability of failure) \( log(\mu/(1-\mu)) \) and
+transforming by taking \( exp() \) yields</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+\frac{\mu}{1-\mu}=exp(\mathbf{x_i'\beta})
+\end{eqnarray*}</script>
+
+<p>which shows how the
+covariates influence the odds \( \mu/(1-\mu) \). <br />
+Similarly also other CDFs \( F(.) \) with \( F: \mathbb{R} \rightarrow [0, 1] \)
+can be used as the inverse link function, the most popular being</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+g(\mu)=\Phi^{-1}(\mu)
+\end{eqnarray*}</script>
+
+<p>where \(\Phi^{-1} \) is the inverse CDF of the
+standard normal distribution and therefore this model entered the
+literature as the <em>probit</em> model. In terms of the normal distribution we
+would get</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{eqnarray*}
+P(y_i = 1) & = & \mu = g^{-1}(\eta) = \Phi(\mathbf{x_i'\beta}) = \Phi(\eta)\\
+                & = & \int_\infty^{\mathbf{x_i'\beta}} \! \phi(z) dz = \int_\infty^{\mathbf{x_i'\beta}} \! \frac{1}{2\pi} exp\left( \frac{-z^2}{2} \right) dz
+\end{eqnarray*} %]]></script>
+
+<p>As can be seen in
+the Figure below, the logistic and normal CDF, i.e., the inverse
+link functions (response functions) that map the linear predictor to the
+unit interval are very similar. They are both symmetric around zero but
+the logistic CDF somewhat slower approaches 1 and 0 for
+\( \eta \rightarrow +/- \infty \) respectively.</p>
+
+<p><img src="http://localhost:4000/assets/logprob.png" alt="" />
+<em>Inverse Logit and Probit functions.</em></p>
+
+<p>This emerges because the logistic distribution has somewhat heavier
+tails. And because the logistic CDF has a variance of \(  \pi^2/3 \) (and not
+1 like the standard normal distribution) it has to be compared with a
+rescaled normal CDF \( \Phi \) with a variance of \( \sigma^2=\phi^2/3 \). In the
+Figure above one can see that the Logit- and the (adjusted)
+Probit response function are very similar. Statistical analyses with
+Logit- and Probit-models therefore always lead to very similar results
+for the predicted probabilities. The rescaling of the parameters is
+thereby conserved whereby the coefficients of a Logit-models differ
+approximately by a factor of \( \sigma=\pi\sqrt{3} \approx 1.814 \), but the
+estimated probabilities are very similar.<br />
+By specifying all of the above and further assume independence (which is
+often natural to assume for cross-section data), we can specify the full
+likelihood where the parameters are connected to the linear predictor
+via the link-function \( g(\mu)=\eta \) and it is possible to estimate the
+model via maximum likelihood. For this it is important to note that the
+linear predictor \( \eta_i=\mathbf{x_i’\beta} \) depends on \( \beta \) and
+influences our conditional expectation \( \mu_i \) and further our canonical
+parameter \( \theta \).<sup id="fnref:10"><a href="#fn:10" class="footnote">10</a></sup> In general, there is no analytic solution to
+this expression and is therefore typically estimated by <em>iterative
+weighted least squares</em> which is a version of the Fisher scoring adapted
+to GLMs.</p>
+
+<h4 id="latent-variable-approach">Latent Variable Approach</h4>
+
+<p>So far we have argued that we want to model probabilities therefore,
+statistically, it makes sense to map our linear predictor to the unit
+interval. Apart from these considerations there are of course also
+economic/behavioural justifications for why we use these specifications
+and the corresponding link functions. Before proceeding to these
+considerations we want to briefly discuss the <em>latent variable
+approach</em>. <br />
+The idea is that the binary outcomes we observe are generated by an
+unobservable underlying (latent) variable \( y_i \) that captures the
+propensity to have a "success" (i.e., outcome \( 1 \)) or not. Only if
+this latent variable is larger than some threshold \( t \), we observe a
+success. This can be written down via
+\( y_i^* = \mathbf{x_i^\beta} + \epsilon_i \) where the linear predictor
+models the mean of the latent variable. But what we actually observe is
+only whether the latent variable exceeded some certain threshold., i.e.</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+y_i = I(y_i^* \geq t) = 1  \text{ if } y_i^* \geq t \text{ and } 0 \text{ otherwise }
+\end{eqnarray*}</script>
+
+<p>Most frequently the threshold value \( t \) is chosen to be \( 0 \) because
+choosing a different threshold would only affect the intercept in the
+estimations. The probability to have a success, i.e., that \( y_i = 1 \) for
+a given set of explanatory variables can then be written down as the
+corresponding value of the CDF evaluated at \( \mathbf{x_i’\beta} \). This
+can be derived via <sup id="fnref:11"><a href="#fn:11" class="footnote">11</a></sup></p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{eqnarray*}
+P(y_i = 1 | \mathbf{x_i'}) = \mu_i & = & P(y_i^* \geq 0| x_i) = P(\mathbf{x_i'\beta} + \epsilon_i \geq 0 | \mathbf{x_i})\\
+         & = & P(\epsilon_i \geq \mathbf{-x_i'\beta} | \mathbf{x_i}) = P(\epsilon \leq \mathbf{x_i'\beta}| \mathbf{x_i})\\
+         & = & F(\mathbf{x_i'\beta)}
+\end{eqnarray*} %]]></script>
+
+<p>This shows that by looking at latent variables where the
+latent variable is explained by a mean which is the linear predictor plus
+some random error term we get incidental decisions (\( 0, 1 \)) where the
+probability depends on the linear predictor and the distribution of the
+remaining error term around the latent variable. And then, by assuming
+that \( -\epsilon \) has a logistic distribution brings us to the logit
+model and assuming \( -\epsilon \) to be normally distributed brings us to
+the probit model.</p>
+
+<h4 id="mle">MLE</h4>
+
+<p>Under independence, the likelihood is the product of the individual
+densities (i.e. the joint density, given the data) as a function of the
+parameter vector<sup id="fnref:12"><a href="#fn:12" class="footnote">12</a></sup> which can be written down as <sup id="fnref:13"><a href="#fn:13" class="footnote">13</a></sup></p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+L(\theta)=L(\theta; \mathbf{y}) = \prod_{i=1}^n f(\theta; y_i).
+\end{eqnarray*}</script>
+
+<p>And because it is computationally easier to handle (and also numerically
+more stable), in practice one generally uses a log-transformation (which
+is monotone with respect to maximization) and writes down the
+log-likelihood</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+l(\theta)=logL(\theta) = \sum_{i=1}^n log f(\theta; y_i).
+\end{eqnarray*}</script>
+
+<p>where,
+under independence of our sample, products are turned into
+computationally simpler sums. Then the maximum likelihood estimator
+(MLE) is the parameter estimator \( \hat{\mathbf{\theta}}_{ML} \)that
+maximizes the log-likelihood, i.e.
+\( \hat{\mathbf{\theta}}_{ML}=\arg\max_\theta L(\theta) = \arg\max_\theta l(\theta). \)
+And because the MLE depends on the specific observations (our sample)
+they can be considered as random variables. For inference it is then
+usual to look at Wald tests, Lagrange multiplier tests (LM) or
+Likelihood ratio (LR) tests. If GLMs are correctly specified, they
+inherit all properties of correctly specified ML estimation: efficiency,
+asymptotic normality and consistency.<br />
+Here we will not in detail discuss Maximum Likelihood theory but only
+write down the relevant Bernoulli likelihood that is used in estimation
+for binary response models and assume that the necessary regularity
+conditions and correct specifications of the model guarantee that our
+MLE is consistent, asymptotically normal and efficient.\
+Assuming that the sample is i.i.d the joint distribution for the binary
+choice model can be written down as</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+Pr(\mathbf{y}|\mathbf{X}) = \prod_{i, y_i = 1} [F(\mathbf{x_i'\beta}] \prod_{i, y_i = 0} [1 - F(\mathbf{x_i'\beta})]
+\end{eqnarray*}</script>
+
+<p>and because the observed \( y_i \)’s are the outcome of Bernoulli
+experiments the likelihood for a sample of \( n \) is then</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+L(\beta | \mathbf{y, X} = \prod_{i=1}^n [F(\mathbf{x_i\beta}]^{y_i} [1 - F(\mathbf{x_i'\beta}]^{1-y_i}
+\end{eqnarray*}</script>
+
+<p>where \( (.) \) again stands for either the CDF of the normal or the
+logistic distribution. The parameters of this model are then estimated
+by numerical methods (e.g. Newton-Raphson Algorithm).</p>
+
+<h1 id="application-german-health-care-usage-gsoep">Application: German Health Care Usage (GSOEP)</h1>
+
+<p>For our empirical application we want to make use of a dataset that is
+about German health care usage and originates from the German
+Socioeconomic Panel Survey (GSOEP). The sample covers the years 1984-95
+and was used in a study by @riphahn:03 that investigated whether the
+presence of private insurance had an effect on the utilization (counts)
+of physician visits and hospital visits. The dataset is an unbalanced
+panel of 7,293 households and among the variables reported are household
+income with numerous additional sociodemographic variables including
+<code class="highlighter-rouge">age</code>, <code class="highlighter-rouge">gender</code>, <code class="highlighter-rouge">education</code> etc. The number of observations varies from
+one to seven (1,525; 1,079; 825; 926; 1,311; 1,000; 887) with a total
+number of 27,326 observations.<sup id="fnref:14"><a href="#fn:14" class="footnote">14</a></sup></p>
+
+<p>The dataset can be used to assess various research questions with
+various econometric models (count data models like Poisson regression,
+zero-inflation models or hurdle-models; binary choice models etc.).
+Since we want to model binary choices, our variable of interest
+(dependent variable) for this application is a binary variable $y$ that
+indicates whether an individual visited a doctor <em>at all</em> or not. That
+is, from the potential information of counts we have in the dataset our
+variable \( y \) takes on only the value \( 0 \) for \( docvis=0 \) and \( 1 \) for
+\( docvis=1 \). From the various socioeconomic variables (covariates) we
+decided to use only <code class="highlighter-rouge">gender</code>, <code class="highlighter-rouge">age</code>, <code class="highlighter-rouge">age2</code>, <code class="highlighter-rouge">hhinc</code>, <code class="highlighter-rouge">hhkids</code>, <code class="highlighter-rouge">educ</code>,
+<code class="highlighter-rouge">married</code> and <code class="highlighter-rouge">working</code> for the regressions.</p>
+
+<p><img src="http://localhost:4000/assets/visits.png" alt="" />
+<em>Count variable of doctor visits (left), binary variable (right).</em></p>
+
+<p>In the Figure above we can see the count variable <code class="highlighter-rouge">docvis</code> in
+contrast to the binary variable <code class="highlighter-rouge">doc</code>. The amount of observations that
+visited a doctor at least once (i.e. \(y&gt;0 \)) is larger compared to
+observations for which we have \(y=0 \). There are a total of 10,135
+observations that did <em>not</em> visit a doctor in contrast to 17,191 that
+did. In the next Figure below we have also plotted the variable <code class="highlighter-rouge">healthsat</code>
+across gender for each level (ranging from 0 - 10). However, we have
+decided to not use this variable in the regressions.<br /></p>
+
+<p><img src="http://localhost:4000/assets/healthsat.png" alt="" />
+<em>Health satisfaction, coded 0 (low) - 10 (high) by gender.</em></p>
+
+<p>Apart from the above, we can also have a look at bivariate relationships
+between our response and some of the regressors. In particular assessing
+the relationship between <code class="highlighter-rouge">educ</code> and <code class="highlighter-rouge">age</code> with our dependent variable in our
+Figure below, we see that with increasing education the
+tendency to visit a doctor decreases while with increasing age there
+seems to be a quadratic effect so that first the tendency to visit a
+doctor slightly decreases and then takes up again after the
+mid-fourties.</p>
+
+<p><img src="http://localhost:4000/assets/educage.png" alt="" />
+<em>Bivariate relationship between educ and age with doctor visits.</em></p>
+
+<h4 id="models">Models</h4>
+
+<p>As mentioned above, the dataset allows a vast array of models to be
+estimated. Within the binary choice models we could also make use of the
+panel structure of the data at hand. But due to time restrictions in
+preparing this project we restricted ourselves to the pooled logit and
+probit estimation and can hopefully add the binary models to this
+project anytime soon. Both models are estimated with the covariates
+<code class="highlighter-rouge">gender</code>, <code class="highlighter-rouge">age</code>, <code class="highlighter-rouge">age2</code>, <code class="highlighter-rouge">hhinc</code>, <code class="highlighter-rouge">hhkids</code>, <code class="highlighter-rouge">educ</code>, <code class="highlighter-rouge">married</code> and
+<code class="highlighter-rouge">working</code>.<br />
+The Table below
+reports the regression output of these two models. Looking solely at the
+sign of the coefficients we see that for <code class="highlighter-rouge">gender: female</code> we have a
+higher probability to visit a doctor, for <code class="highlighter-rouge">age</code> there are two effects
+(age and age2) where the coefficient for <code class="highlighter-rouge">age</code> is negative and the one
+for <code class="highlighter-rouge">age2</code> positive, indicating that the probability to visit a doctor
+first decreases with age and then goes up again (though the effects are
+fairly small). For <code class="highlighter-rouge">hhinc</code> the effect is almost zero and not
+significant, and for <code class="highlighter-rouge">hhkids: yes</code>, <code class="highlighter-rouge">educ</code>, <code class="highlighter-rouge">married: yes</code> and
+<code class="highlighter-rouge">working: yes</code> the effects are significantly negative (though only on a
+5% significant level for <code class="highlighter-rouge">working: yes</code>).</p>
+
+<p><img src="http://localhost:4000/assets/binarychoice.png" alt="" />
+<em>Estimation results Logit and Probit.</em></p>
+
+<h4 id="interpretation-of-parameters">Interpretation of Parameters</h4>
+
+<p>Between logit and probit models, often logit-models are preferred
+because, besides the latent variable approach which they have both in
+common, the logit-transformation has the advantage that it can be
+regarded as a linear model on the log-odds scale, as we have stated
+above. By taking expectations, i.e. \( exp(\mathbf{x_i’\beta}) \), we get a
+model on the odds scale, therefore the coefficients of logistic
+regressions can be interpreted in terms of <em>odds</em>. This approach makes
+it easy to compare two groups of subjects if they differ only for the
+\( lth \) regressor by one unit which then results in \( exp(\beta_l) \) and
+immediately states the odds ratio, which is the ratio of the respective
+odds between the two groups. Relative changes in the odds ratio are then
+simply \( exp(\beta_l) - 1 \). By this we can immediately interpret
+\( exp(\beta)-1 \) as changes on the odds-scale by looking at the
+coefficients from our logit-regression. For small \( \beta_l \) we further
+have \( exp({\beta_l})-1 \approx \beta_l \), c.p. For the probit model
+instead, a direct interpretation of the coefficients like in the logit
+model is not possible. Still these considerations don’t tell us
+something about probabilities which we actually want to model.<sup id="fnref:15"><a href="#fn:15" class="footnote">15</a></sup> For
+the remainder we will foremost focus on the interpretation of the
+logit-model (due to its interpretation in terms of odds) noting that in
+terms of predicted probabilities the two models are virtually
+equivalent.</p>
+
+<p>Taking a step towards probabilities and how they are affected by changes
+in the regressors, things become slightly more involved than in the CLM.
+First of all, the estimated coefficients can be used to calculate the
+respective probabilities for a certain linear predictor \( \eta \), ie. for
+every individual in the dataset with certain characteristics there
+exists a corresponding (success) probability that can be computed by
+simply evaluating
+\( \hat{\mathbf{P}}r(y_i|\mathbf{x_i’}) = F(\mathbf{x_i’\hat{\mathbf{\mathbf{\beta}}}}) \).
+This can be, for example, used to calculate an average success
+probability across all individuals (which is of course not very
+informative as it summarizes a lot of information in the dataset). In
+our case the mean of the fitted probabilities (predicted probabilities)
+is about 0.63 (for both logit and probit). In R the <code class="highlighter-rouge">predict</code>-function
+can be used to compute predictions of the response
+\( \hat{\mathbf{\mu}}_i = \hat{\mathbf{P}}r(y_i|\mathbf{x_i’}) \) where the
+default is the prediction of the linear predictor. Comparing, for
+example, an individual with
+<code class="highlighter-rouge">gender=male, age=44, hhinc=3500, kids=yes, educ=18, married=yes, working=yes</code>
+to a person with the exact same characteristics <em>except</em> that we set
+gender=female we get a predicted probability to visit a doctor of 0.4731
+as compared to 0.6123, respectively.<sup id="fnref:16"><a href="#fn:16" class="footnote">16</a></sup> The <code class="highlighter-rouge">predict</code>-function thereby
+takes the data and multiplies the vector of coefficients with the design
+matrix. By setting <code class="highlighter-rouge">type = "response"</code> the linear predictors are then
+automatically sent through the inverse logit link function
+\( \Lambda(\eta) \) that evaluates the corresponding probability.<sup id="fnref:17"><a href="#fn:17" class="footnote">17</a></sup> From
+these calculated probabilities it then possible to get back to the odds
+by plugging the calculated probabilities into the logit-link function or
+(\( exp(logit-link) \) function for the log-odds). So for a male person with
+the above stated characteristics the probability to visit a doctor are
+0.8987 times the probability to not visit a doctor whereas for a female
+person the odds to visit a doctor are 1.578 times the probability to not
+visit a doctor.</p>
+
+<p>For our odds-ratio (as outlined in the previous paragraph) we would get
+\( exp(0.564) = 1.758 \), meaning that the probability of a female person
+with a specific combination of covariates to visit a doctor is 1.758
+times higher than the odds of a male person with exactly the same
+covariate values (i.e., the regressors just differ by the $lth$
+regressor by one unit!). And the corresponding relative change in the
+odds ratio is then \( 0.7577 \approx 76\% \), meaning that the odds to visit
+a doctor increase by 70% by changing the \( lth$ regressor from <code class="highlighter-rouge">male</code> to
+<code class="highlighter-rouge">female</code>.<sup id="fnref:18"><a href="#fn:18" class="footnote">18</a></sup> Similarly we can state that if education increases by one
+unit we expect the odds to visit a doctor to decrease by about
+\( exp(-0.023) - 1 = -0.02274 = -2.274\% \), all else equal. Similarly
+having kids under 16 years in the household decreases the odds to visit
+a doctor by about 15%, being married increases them by about 14% and
+working decreases them by about 7% respectively. One feature of the
+calculation and report of odds is that they are still less well
+interpretable than probabilities (which are our primary interest).\
+Alternatively it would also be possible to calculate the probability at
+the mean regressors which results in
+\( \hat{\mathbf{P}}r(y_i|\mathbf{\hat{\mathbf{\mathbf{x}}}_i’}) = F(\mathbf{\hat{\mathbf{\mathbf{x}}}_i’\hat{\mathbf{\mathbf{\beta}}}}) \).
+In our case the predicted probability at the mean regressors across the
+sample are 0.46 (logit) and 0.68 (probit) respectively.</p>
+
+<p>In usual linear models the expectation \( E(y_i|\mathbf{x_i}) \) that we
+want to model is a <em>linear function</em> in the parameters, therefore every
+single parameter could be directly interpreted as a marginal effect on
+the expectation, ceteris paribus. An important difference of binary
+choice models to the CLM is that partial derivatives of the expectation,
+i.e. marginal effects, are not constant because they not only depend on
+the parameter under consideration but on the entire linear predictor
+that, of course, differs from person to person. This means that marginal
+effects result in</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+\frac{\partial P(y_i = 1|\mathbf{x_i'})}{\partial x_h} = \frac{\partial F(\mathbf{x_i'\beta})}{\partial\mathbf{x_h}} = f(\mathbf{x_i'\beta}) \cdot \beta_h
+\end{eqnarray*}</script>
+
+<p>where \( f(.) \) now stands for the derivative of either the logistic or
+normal CDF, i.e. the corresponding <em>density</em>. The factor \( f(.) \) is
+always positive, therefore the sign of the corresponding \( f\beta_h \)
+directly shows in which direction the expectation changes. Due to the
+non-linearity he <em>size</em> of a marginal effect crucially depends on the
+actual starting value we are considering when assessing the effect of
+the change of the \( lth \) regressor on the predicted probability.
+Depending on the individual and its characteristics (that is
+incorporated in the linear predictor), the marginal effect can be larger
+or smaller. Due to this, it is common to report "typical" effects,
+namely <em>average</em> marginal effects, similar to above where we reported
+average predicted probabilities and predicted probabilities at mean
+regressors. These can be calculated either by taking the mean over all
+observations (i.e. calculate the marginal effect for each observation
+and than take the mean) <em>or</em> calculate the marginal effect at the mean
+of the regressors. In the former case we average across the
+probablity-scale, in the later across the regressor-scale, therefore
+also the results will differ.<br />
+Because average probabilities as well as average marginal effects always
+merge a lot of information in one single number, their usefulness in
+terms of representation of the information in the data is debatable.
+Therefore it is often better to evaluate marginal probability effects by
+comparing groups in the data (here: married vs. not married, working vs.
+not working). Another issue is that software packages to compute
+marginal effects often don’t compute them correctly when there are
+interactions or polynomials in the model.</p>
+
+<p>We have seen that both, odds and average (marginal) probabilities
+(effects) are either difficult to interpret or not very representative
+for the information in the dataset. Therefore, another very helpful tool
+to assess the information in the data is to fix all but the \( lth \)
+regressor at their mean and then evaluate the marginal probability
+effects for the steps in the \( lth \) regressor or directly plot the
+predicted probability against the entire range of values of the \( lth \)
+regressor. We want to show here the latter for <code class="highlighter-rouge">educ</code> which are
+so-called "effect-plots". Such plots can be either generated by going
+step by step through the respective calculations, setting up a
+design-matrix where all but one regressor are fixed to a "typical"
+value we want to investigate and then let the \( lth \) regressor "run"
+and see how the predicted probabilities change. That is, we look how
+changes in one regressor, everything else fixed, translate into effects
+on probabilities. So instead of looking at marginal effects (which are
+the derivative of our expectation = success probability) it is often
+more convenient to directly look at the probabilities themselves. We
+have done this to assess the probability to visit a doctor depending on
+education while keeping all other values fixed to either their mean (for
+numeric data) or a "typical" value (for dummies). This exercise was
+then replicated for the same set of values except that we changed the
+status of <code class="highlighter-rouge">working</code> from "yes" to "no" (red line in the plot). The
+result can be seen in
+Figure below where we see that if education runs
+from 7 to 18, the probability to visit a doctor decreases from slightly
+above 57% to about 51%. In between the function is almost linear. By
+changing <code class="highlighter-rouge">working</code> from "yes" to "no" shifts our line so that
+persons that don’t work have a higher probability (but still decreasing
+for increasing education) across the entire range as compared to persons
+that do work.<sup id="fnref:19"><a href="#fn:19" class="footnote">19</a></sup></p>
+
+<p><img src="http://localhost:4000/assets/educeffect.png" alt="" />
+<em>Effect of education (everything else fixed at mean regressor); red line: changing “working”
+from “yes” to “no”.</em></p>
+
+<p>If we want to apply the procedure above to every covariate one at a time
+we can use the <code class="highlighter-rouge">effects</code>-package in R that does exactly what we did
+automatically and generates the respective effect-plots. For this it is
+important to slightly adapt the function-call for the "glm" so that R
+recognizes that <code class="highlighter-rouge">age</code> and <code class="highlighter-rouge">age2</code> belong together. The Figure below shows the resulting output.</p>
+
+<p><img src="http://localhost:4000/assets/alleffects.png" alt="" />
+<em>Effect of education (everything else fixed at mean regressor); red line: changing “working”
+from “yes” to “no”.</em></p>
+
+<p>To read these plots it is important to recognize that in each plot of
+the respective regressor all other covariates are fixed at their mean
+(or "typical") values. By this it is possible to isolate the effects
+of covariates on the predicted probabilities and analyze them one at a
+time. We see a clear difference in the probability to visit a doctor
+regarding <code class="highlighter-rouge">gender</code>, a quadratic age-effect whereby the probability to
+visit a doctor increases with age from about 37 onwards. Household
+income (<code class="highlighter-rouge">hhinc</code>) reflects the insignificant effect we already saw in the
+regression output whereas having kids that are younger than 16
+(<code class="highlighter-rouge">hhkids</code>) interestingly corresponds to a slightly lower probability to
+visit a doctor. Education has the negative (almost linear effect) we
+already showed above and married individuals have, ceteris paribus, a
+slightly higher probability to visit a doctor whereas working
+individuals have a slightly lower probability to do so. Our results show
+that the corresponding differences in probabilities are most pronounced
+for the <code class="highlighter-rouge">age</code>-effect whereas for the other covariates the differences
+are fairly moderate.\
+We want to emphasize again that for our results so far we ignored the
+panel-structure in the data. Our pooled logit and probit regressions are
+therefore just a starting point for more sophisticated binary choice
+panel data models.</p>
+
+<h4 id="goodness-of-fit">Goodness of Fit</h4>
+
+<p>To assess the goodness of fit of our models there are various tools and
+procedures available. One option is the so-called McFadden \( R^2 \). In
+comparison to linear models where the \( R^2 \) is a figure that reports the
+proportion of the total variation in the dependent variable that is
+explained by the model, this variance decomposition does not work for
+logit/probit models. Instead, a substitute is a log-likelihood
+comparison of the full model (with all regressors) with a constant-only
+model but it cannot be interpreted as the \( R^2 \) in linear models. The
+McFadden \( R^2 \) is thereby calculated as</p>
+
+<script type="math/tex; mode=display">\begin{eqnarray*}
+0 \leq R_{McFadden}^2 = 1- \frac{logLik_{unrestricted}}{logLik_{restricted}} \leq 1.
+\end{eqnarray*}</script>
+
+<p>For the pseudo \( R^2 \) a value near one just indicates a better model fit
+than a value near zero. This is because if our explanatory variables
+have no explanatory power at all we should get
+\( logLik_{unrestricted} = logLik_{restricted} \) and the pseudo-\( R^2 \) would
+then become 0. In the extreme case where the model perfectly explains
+the dependent variable, the log-likelihood would be zero and the
+pseudo-\( R^2 \) would be 1.<sup id="fnref:20"><a href="#fn:20" class="footnote">20</a></sup> In our case the corresponding values for
+the McFadden-\( R^2 \)s are \( 0.0368 \) for the logit and \( 0.03661 \) for the
+probit model.</p>
+
+<p>Another helpful visual tool are so-called "confusion matrices" that
+check the quality of the predictions in-sample. They are contingency
+tables of observed vs. predicted values where by choosing some cutoff
+probability $c$ calculated probabilities are considered a "success" or
+a "failure". The table summarizes correct predictions on the main
+diagonal and incorrect predictions on the off-diagonal. These
+off-diagonal values can either be "false negatives", i.e. cases that
+were falsely predicted to not visit a doctor while they actually did and
+"false positives", i.e. cases that were falsely predicted to visit a
+doctor while they actually didn’t. Having a look at the
+Table,
+we see that a fairly large amount of cases could be predicted accurately
+but unfortunately also the false negative rate is quite high with 8299
+cases.<sup id="fnref:21"><a href="#fn:21" class="footnote">21</a></sup></p>
+
+<p><img src="http://localhost:4000/assets/confmat.png" alt="" />
+<em>Confusion Table for the Logit Model.</em></p>
+
+<p>The last thing we did was to perform a Likelihood-Ratio test that
+suggests that our model is a significant improvement over a
+constant-only model.</p>
+
+<h1 id="appendix">Appendix</h1>
+<h4 id="r-code">R-Code</h4>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Econometrics Project, Binary Choice Models</span><span class="w">
+</span><span class="c1">#Marcel Kropp</span><span class="w">
+</span><span class="c1">#19.6.2014</span><span class="w">
+
+</span><span class="n">dev.off</span><span class="p">()</span><span class="w">
+</span><span class="c1">## inverse logit and probit</span><span class="w">
+</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">-47</span><span class="o">:</span><span class="m">47</span><span class="o">/</span><span class="m">10</span><span class="w">
+</span><span class="n">par</span><span class="p">(</span><span class="n">mar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">),</span><span class="w"> </span><span class="n">mfrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w">
+</span><span class="c1">#quartz()</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">pnorm</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"l"</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w">
+     </span><span class="n">xlab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">expression</span><span class="p">(</span><span class="n">eta</span><span class="p">),</span><span class="w"> </span><span class="n">ylab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">expression</span><span class="p">(</span><span class="n">g</span><span class="p">(</span><span class="n">eta</span><span class="p">)</span><span class="o">^</span><span class="m">-1</span><span class="p">),</span><span class="w">
+     </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"brown1"</span><span class="p">,</span><span class="w"> </span><span class="n">cex.lab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.8</span><span class="p">,</span><span class="w"> </span><span class="n">cex.axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.8</span><span class="p">)</span><span class="w">
+</span><span class="n">lines</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">plogis</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"green4"</span><span class="p">)</span><span class="w">
+</span><span class="n">lines</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">pnorm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="o">/</span><span class="n">dlogis</span><span class="p">(</span><span class="m">0</span><span class="p">)),</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">lty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">
+
+</span><span class="n">legend</span><span class="p">(</span><span class="s2">"topleft"</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"logistic"</span><span class="p">,</span><span class="w"> </span><span class="s2">"normal"</span><span class="p">,</span><span class="w"> </span><span class="s2">"normal (adj)"</span><span class="p">),</span><span class="w">
+       </span><span class="n">lty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w">
+       </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"green4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"brown1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"black"</span><span class="p">),</span><span class="w">
+       </span><span class="n">bty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="n">cex</span><span class="o">=</span><span class="m">0.8</span><span class="p">)</span><span class="w">
+
+
+
+
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">## preliminaries            </span><span class="w">
+</span><span class="c1">#############</span><span class="w">
+</span><span class="n">options</span><span class="p">(</span><span class="n">prompt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"R&gt;"</span><span class="p">,</span><span class="w"> </span><span class="n">continue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"+"</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">64</span><span class="p">,</span><span class="w">
+        </span><span class="n">digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">show.signif.stars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+</span><span class="c1">#set.seed(1071)</span><span class="w">
+</span><span class="n">getwd</span><span class="p">()</span><span class="w">
+</span><span class="n">setwd</span><span class="p">(</span><span class="s2">"/Users/..."</span><span class="p">)</span><span class="w">
+
+
+
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">## original dataset            </span><span class="w">
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">#original dataset is rather huge;</span><span class="w">
+</span><span class="c1">#27,326 Observations</span><span class="w">
+</span><span class="c1">#1 to 7 years, panel</span><span class="w">
+</span><span class="c1">#7,293 households observed</span><span class="w">
+</span><span class="c1">#The number of observations for a certain individual ranges from 1 to 7.</span><span class="w">
+</span><span class="c1">#Frequencies are: 1=1525, 2=2158, 3=825, 4=926, 5=1051, 6=1000, 7=987</span><span class="w">
+
+</span><span class="c1">#Here we list the variables that can be found in the complete dataset;</span><span class="w">
+</span><span class="c1">#The variables we used for our analysis are in CAPITAL LETTERS.</span><span class="w">
+
+</span><span class="c1">#variables:</span><span class="w">
+</span><span class="c1">#   ID...........person ID-number</span><span class="w">
+</span><span class="c1">#   FEMALE.......female = 1; male = 0</span><span class="w">
+</span><span class="c1">#   YEAR.........year of observation</span><span class="w">
+</span><span class="c1">#   AGE..........age in years</span><span class="w">
+</span><span class="c1">#   hsat.........health satisfaction,</span><span class="w">
+</span><span class="c1">#                     coded 0 (low) - 10 (high);</span><span class="w">
+</span><span class="c1">#                     Note, this variable has 40 coding errors.</span><span class="w">
+</span><span class="c1">#                     Variable NEWHSAT below fixes them.</span><span class="w">
+</span><span class="c1">#   handdum......handicapped = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   handper......degree of handicap in percent (0 - 100)</span><span class="w">
+</span><span class="c1">#   DOCTOR.......1 if Number of doctor visits &gt; 0; otherwise = 0             </span><span class="w">
+</span><span class="c1">#   hospital.....1 if Number of hospital visits &gt; 0; otherwise = 0   </span><span class="w">
+</span><span class="c1">#   HHNINC.......household nom. month. netincome in German marks/10000</span><span class="w">
+</span><span class="c1">#   HHKIDS.......children under age 16 in the household = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   EDUC.........years of schooling</span><span class="w">
+</span><span class="c1">#   MARRIED......married = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   haupts.......highest degree is Hauptschul degree = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   reals........highest degree is Realschul degree = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   fachhs.......highest degree is Polytechnical degree = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   abitur.......highest degree is Abitur = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   univ.........highest degree is university degree = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   WORKING......employed = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   bluec........blue collar employee = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   whitec.......white collar employee = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   self.........self employed = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   beamt........civil servant = 1; otherwise = 0</span><span class="w">
+</span><span class="c1">#   DOCVIS.......number of doctor visits in last three months</span><span class="w">
+</span><span class="c1">#   hospvis......number of hospital visits in last calendar year</span><span class="w">
+</span><span class="c1">#   public.......insured in public health insurance = 1;</span><span class="w">
+</span><span class="c1">#                otherwise = 0</span><span class="w">
+</span><span class="c1">#   addon........insured by add-on insurance = 1; otherswise = 0</span><span class="w">
+
+</span><span class="c1">#Notes: In the applications in the text of Greene, the following additional</span><span class="w">
+</span><span class="c1">#variables are used:</span><span class="w">
+</span><span class="c1">#   numobs.......Number of observations for this person.</span><span class="w">
+</span><span class="c1">#                Repeated in each row of data.</span><span class="w">
+</span><span class="c1">#   NEWHSAT = hsat; 40 observations on HSAT recorded between</span><span class="w">
+</span><span class="c1">#                   6 and 7 were changed to 7.</span><span class="w">
+
+
+
+
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">## read in the dataset            </span><span class="w">
+</span><span class="c1">#############</span><span class="w">
+
+</span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">file.exists</span><span class="p">(</span><span class="s2">"healthcare.rda"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">url</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"http://people.stern.nyu.edu/wgreene/Econometrics/healthcare.csv"</span><span class="w">
+  </span><span class="n">download.file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">destfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"healthcare.csv"</span><span class="p">)</span><span class="w">
+  </span><span class="c1">##read in the data into R</span><span class="w">
+  </span><span class="n">healthcare</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.csv</span><span class="p">(</span><span class="s2">"healthcare.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+
+  </span><span class="c1">##adjust dataset</span><span class="w">
+  </span><span class="n">healthcare</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">healthcare</span><span class="p">,</span><span class="w"> </span><span class="n">select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">DOCTOR</span><span class="p">,</span><span class="w"> </span><span class="n">DOCVIS</span><span class="p">,</span><span class="w"> </span><span class="n">NEWHSAT</span><span class="p">,</span><span class="w">
+                                   </span><span class="n">EDUC</span><span class="p">,</span><span class="w"> </span><span class="n">HHNINC</span><span class="p">,</span><span class="w"> </span><span class="n">HHKIDS</span><span class="p">,</span><span class="w"> </span><span class="n">AGE</span><span class="p">,</span><span class="w">
+                                   </span><span class="n">FEMALE</span><span class="p">,</span><span class="w"> </span><span class="n">MARRIED</span><span class="p">,</span><span class="w"> </span><span class="n">WORKING</span><span class="p">,</span><span class="w">
+                                   </span><span class="n">YEAR</span><span class="p">))</span><span class="w">
+  </span><span class="c1">#retransform the income variable</span><span class="w">
+  </span><span class="n">healthcare</span><span class="o">$</span><span class="n">HHNINC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">healthcare</span><span class="o">$</span><span class="n">HHNINC</span><span class="p">)</span><span class="o">*</span><span class="m">10000</span><span class="w">
+  </span><span class="c1">#View(healthcare)</span><span class="w">
+
+  </span><span class="c1">#further transformations; relabelling, appropriate types</span><span class="w">
+  </span><span class="n">healthcare</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">with</span><span class="p">(</span><span class="n">healthcare</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="w">
+    </span><span class="s2">"id"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"doc"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">DOCTOR</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w">
+                   </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)),</span><span class="w">
+    </span><span class="s2">"docvis"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DOCVIS</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hsat"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NEWHSAT</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"educ"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EDUC</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hhinc"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HHNINC</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hhkids"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">HHKIDS</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)),</span><span class="w">
+    </span><span class="s2">"age"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AGE</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"gender"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">FEMALE</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"male"</span><span class="p">,</span><span class="w"> </span><span class="s2">"female"</span><span class="p">)),</span><span class="w">
+    </span><span class="s2">"married"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">MARRIED</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)),</span><span class="w">
+    </span><span class="s2">"working"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">WORKING</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)),</span><span class="w">
+    </span><span class="s2">"year"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">YEAR</span><span class="w">
+  </span><span class="p">))</span><span class="w">
+  </span><span class="c1">## save the file in .rda format</span><span class="w">
+  </span><span class="n">save</span><span class="p">(</span><span class="n">healthcare</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"healthcare.rda"</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">load</span><span class="p">(</span><span class="s2">"healthcare.rda"</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span><span class="c1">#a few separate bivariate plots</span><span class="w">
+</span><span class="n">dev.off</span><span class="p">()</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">married</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">hhkids</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">hhinc</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">married</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">working</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+
+
+</span><span class="c1">#our variable of interest is the binary choice:</span><span class="w">
+</span><span class="c1">#visited doctor (yes/no)</span><span class="w">
+</span><span class="n">barplot</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">healthcare</span><span class="o">$</span><span class="n">doc</span><span class="p">),</span><span class="w">
+        </span><span class="n">xlab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Individual visited doctor in past year"</span><span class="p">,</span><span class="w">
+        </span><span class="n">ylab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"absolute frequency"</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">#comparison reveals of count (docvis) and binary variable (doc)</span><span class="w">
+</span><span class="n">layout</span><span class="p">(</span><span class="n">matrix</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">widths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0.5</span><span class="p">))</span><span class="w">
+</span><span class="n">matrix</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+</span><span class="n">par</span><span class="p">(</span><span class="n">mar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">4.1</span><span class="p">,</span><span class="w"> </span><span class="m">4.1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">))</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">healthcare</span><span class="o">$</span><span class="n">docvis</span><span class="p">),</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="n">xlab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"count variable (visits)"</span><span class="p">,</span><span class="w">
+                         </span><span class="n">cex.lab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">cex.axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">ylab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"frequency"</span><span class="p">)</span><span class="w">
+</span><span class="c1">#then we set the margins for the second graph</span><span class="w">
+</span><span class="n">par</span><span class="p">(</span><span class="n">mar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">4.1</span><span class="p">,</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="m">2.1</span><span class="p">,</span><span class="w"> </span><span class="m">0.9</span><span class="p">))</span><span class="w">
+</span><span class="n">barplot</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">healthcare</span><span class="o">$</span><span class="n">doc</span><span class="p">),</span><span class="w"> </span><span class="n">xlab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"binary variable (visits)"</span><span class="p">,</span><span class="w">
+                         </span><span class="n">cex.lab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">cex.axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">)</span><span class="w">
+</span><span class="n">table</span><span class="p">(</span><span class="n">healthcare</span><span class="o">$</span><span class="n">doc</span><span class="p">)</span><span class="w">
+
+
+</span><span class="c1">#health satisfaction across gender</span><span class="w">
+</span><span class="n">attach</span><span class="p">(</span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">par</span><span class="p">(</span><span class="n">mfrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w">
+</span><span class="n">table</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">hsat</span><span class="p">)</span><span class="w">
+</span><span class="c1">#reformat the data to be in long format</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"reshape2"</span><span class="p">)</span><span class="w">
+</span><span class="n">table.long</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">melt</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="w"> </span><span class="n">id.vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"gender"</span><span class="p">)</span><span class="w">
+</span><span class="n">table.long</span><span class="w">
+</span><span class="c1">#use ggplot2 to create the plot</span><span class="w">
+</span><span class="c1">#install.packages("ggplot2")</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"ggplot2"</span><span class="p">)</span><span class="w">
+</span><span class="n">ggplot</span><span class="p">(</span><span class="n">table.long</span><span class="p">,</span><span class="w"> </span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">hsat</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">gender</span><span class="p">)))</span><span class="o">+</span><span class="w">
+  </span><span class="n">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="o">=</span><span class="s2">"identity"</span><span class="p">,</span><span class="w"> </span><span class="n">position</span><span class="o">=</span><span class="s2">"dodge"</span><span class="p">)</span><span class="o">+</span><span class="n">xlab</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">+</span><span class="n">ylab</span><span class="p">(</span><span class="s2">"Frequency"</span><span class="p">)</span><span class="w">
+
+
+</span><span class="c1">#use adapted dataset "healthcare1" for regressions</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">healthcare</span><span class="p">)</span><span class="w">
+</span><span class="n">healthcare1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">healthcare</span><span class="w">
+</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">docvis</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NULL</span><span class="w">
+</span><span class="c1">#healthcare1$hsat &lt;- NULL</span><span class="w">
+</span><span class="n">dev.off</span><span class="p">()</span><span class="w">
+</span><span class="n">par</span><span class="p">(</span><span class="n">mfrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">))</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">educ</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">,</span><span class="w"> </span><span class="n">ylevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">ylab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">)</span><span class="w">
+</span><span class="n">aux</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">educ</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="n">educ</span><span class="o">^</span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">,</span><span class="w"> </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">)</span><span class="w">
+</span><span class="n">edu</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sort</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">educ</span><span class="p">))</span><span class="w">
+</span><span class="n">prop</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ecdf</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">educ</span><span class="p">)(</span><span class="n">edu</span><span class="p">)</span><span class="w">
+</span><span class="n">lines</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span><span class="w"> </span><span class="n">newdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">edu</span><span class="p">),</span><span class="w">
+              </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">prop</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">
+
+</span><span class="n">plot</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">,</span><span class="w"> </span><span class="n">ylevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">ylab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">)</span><span class="w">
+</span><span class="n">aux</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="n">age</span><span class="o">^</span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">,</span><span class="w"> </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">)</span><span class="w">
+</span><span class="n">ag</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sort</span><span class="p">(</span><span class="n">unique</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">age</span><span class="p">))</span><span class="w">
+</span><span class="n">prop</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ecdf</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">age</span><span class="p">)(</span><span class="n">ag</span><span class="p">)</span><span class="w">
+</span><span class="n">lines</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span><span class="w"> </span><span class="n">newdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">),</span><span class="w">
+              </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">prop</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">## models</span><span class="w">
+</span><span class="c1">#############</span><span class="w">
+</span><span class="n">logit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="n">age</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">educ</span><span class="w"> </span><span class="o">+</span><span class="w">
+                   </span><span class="n">married</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">working</span><span class="p">,</span><span class="w">
+                   </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"logit"</span><span class="p">),</span><span class="w">
+                   </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">)</span><span class="w">
+</span><span class="n">summary</span><span class="p">(</span><span class="n">logit</span><span class="p">)</span><span class="w">                               
+</span><span class="n">probit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="n">age</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">educ</span><span class="w"> </span><span class="o">+</span><span class="w">
+                    </span><span class="n">married</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">working</span><span class="p">,</span><span class="w">
+                    </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"probit"</span><span class="p">),</span><span class="w">
+                    </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">)</span><span class="w">
+</span><span class="n">summary</span><span class="p">(</span><span class="n">probit</span><span class="p">)</span><span class="w">
+</span><span class="c1">#Coefficients for probit and logit should differ by a factor of approx. 1.6</span><span class="w">
+</span><span class="n">cbind</span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">),</span><span class="w"> </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)</span><span class="o">*</span><span class="m">1.6</span><span class="p">)</span><span class="w">
+</span><span class="c1">#install.packages("memisc")</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"memisc"</span><span class="p">)</span><span class="w">
+</span><span class="n">mtable</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">probit</span><span class="p">)</span><span class="w">
+</span><span class="n">toLatex</span><span class="p">(</span><span class="n">mtable</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">probit</span><span class="p">))</span><span class="w">
+
+
+
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">## predictions and</span><span class="w">
+</span><span class="c1">## interpretations</span><span class="w">
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">#use predict function to compute predicted probabilities</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3500</span><span class="p">,</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">),</span><span class="w">
+                          </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3500</span><span class="p">,</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">),</span><span class="w">
+                          </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">probit</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3500</span><span class="p">,</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">),</span><span class="w">
+                          </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">probit</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3500</span><span class="p">,</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">),</span><span class="w">
+                          </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="c1">#the relation between link-scale and probability scale can be assessed via</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3500</span><span class="p">,</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">),</span><span class="w">
+                          </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"link"</span><span class="p">)</span><span class="w">
+</span><span class="n">mu1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">exp</span><span class="p">(</span><span class="m">-0.1077</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="nf">exp</span><span class="p">(</span><span class="m">-0.1077</span><span class="p">))</span><span class="w">
+</span><span class="n">mu1</span><span class="w"> </span><span class="c1">#is the same value that we got when setting type = "response"!</span><span class="w">
+
+</span><span class="c1">#equivalently</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3500</span><span class="p">,</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">educ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">),</span><span class="w">
+                          </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"link"</span><span class="p">)</span><span class="w">
+</span><span class="n">mu2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">exp</span><span class="p">(</span><span class="m">0.4568</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="nf">exp</span><span class="p">(</span><span class="m">0.4568</span><span class="p">))</span><span class="w">
+</span><span class="n">mu2</span><span class="w">
+
+</span><span class="c1">#a male person with the above covariates the probability to visit a</span><span class="w">
+</span><span class="c1">#doctor (yes/no) is 0.8987 times the probability to not visit a doctor.</span><span class="w">
+</span><span class="n">mu1</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">mu1</span><span class="p">)</span><span class="w"> </span><span class="c1">#odds</span><span class="w">
+</span><span class="nf">log</span><span class="p">(</span><span class="n">mu1</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">mu1</span><span class="p">))</span><span class="w"> </span><span class="c1">#log Chancen</span><span class="w">
+
+</span><span class="c1">#a female person with the above covariates the probability to visit a</span><span class="w">
+</span><span class="c1">#doctor (yes/no) is 1.578 times the probability to not visit a doctor.</span><span class="w">
+</span><span class="n">mu2</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">mu2</span><span class="p">)</span><span class="w"> </span><span class="c1">#odds</span><span class="w">
+</span><span class="nf">log</span><span class="p">(</span><span class="n">mu2</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">mu2</span><span class="p">))</span><span class="w"> </span><span class="c1">#log Chancen</span><span class="w">
+
+</span><span class="c1">#odds ratios (ratio of odds for female vs odds for male)</span><span class="w">
+</span><span class="nf">exp</span><span class="p">(</span><span class="m">0.564</span><span class="p">)</span><span class="w">
+</span><span class="nf">exp</span><span class="p">(</span><span class="m">0.564</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="w">
+
+</span><span class="c1">#similarly:</span><span class="w">
+</span><span class="c1">#education</span><span class="w">
+</span><span class="nf">exp</span><span class="p">(</span><span class="m">-0.023</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="w">
+
+</span><span class="nf">exp</span><span class="p">(</span><span class="m">-0.166</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="c1">#hhkids</span><span class="w">
+</span><span class="nf">exp</span><span class="p">(</span><span class="m">0.150</span><span class="p">)</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="c1">#married</span><span class="w">
+</span><span class="nf">exp</span><span class="p">(</span><span class="m">-0.073</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="c1">#working</span><span class="w">
+
+</span><span class="c1">#all at once</span><span class="w">
+</span><span class="nf">as.numeric</span><span class="p">(</span><span class="nf">round</span><span class="p">(</span><span class="nf">exp</span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">))</span><span class="w">
+
+
+</span><span class="c1">#age is more difficult to interpret due to the quadratic term!</span><span class="w">
+</span><span class="c1">#also hhinc is not reported because it is insignificant and</span><span class="w">
+</span><span class="c1">#virtually zero!</span><span class="w">
+
+
+
+</span><span class="c1">#average predicted probabilities:</span><span class="w">
+</span><span class="n">mean</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">))</span><span class="w">
+</span><span class="n">mean</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">probit</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">))</span><span class="w">
+
+
+</span><span class="c1">#predicted probability evaluated at mean regressors</span><span class="w">
+</span><span class="p">(</span><span class="n">pred.l</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">plogis</span><span class="w">
+         </span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">gender</span><span class="p">[</span><span class="n">gender</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"female"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">gender</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">3</span><span class="p">]</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">5</span><span class="p">]</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">hhinc</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">6</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">hhkids</span><span class="p">[</span><span class="n">hhkids</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">hhkids</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">7</span><span class="p">]</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">educ</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">8</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">married</span><span class="p">[</span><span class="n">married</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">married</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">logit</span><span class="p">)[</span><span class="m">9</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">working</span><span class="p">[</span><span class="n">working</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">working</span><span class="p">))))))</span><span class="w">
+</span><span class="p">(</span><span class="n">pred.p</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">pnorm</span><span class="w">
+         </span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">gender</span><span class="p">[</span><span class="n">gender</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"female"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">gender</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">3</span><span class="p">]</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">5</span><span class="p">]</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">hhinc</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">6</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">hhkids</span><span class="p">[</span><span class="n">hhkids</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">hhkids</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">7</span><span class="p">]</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">healthcare1</span><span class="o">$</span><span class="n">educ</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">8</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">married</span><span class="p">[</span><span class="n">married</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">married</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+         </span><span class="n">coef</span><span class="p">(</span><span class="n">probit</span><span class="p">)[</span><span class="m">9</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">working</span><span class="p">[</span><span class="n">working</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">])</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">working</span><span class="p">))))))</span><span class="w">
+
+
+</span><span class="c1">#calculation for effects for education "by hand"</span><span class="w">
+</span><span class="n">x.matrix</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">model.matrix</span><span class="p">(</span><span class="n">logit</span><span class="p">)</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">x.matrix</span><span class="p">)</span><span class="w">
+
+</span><span class="n">xbar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">colMeans</span><span class="p">(</span><span class="n">x.matrix</span><span class="p">[,</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">9</span><span class="p">])</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="nf">class</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+
+</span><span class="n">xbar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">xbar</span><span class="p">))</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"gender"</span><span class="w">
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"hhkids"</span><span class="w">
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">7</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"married"</span><span class="w">
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"working"</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="nf">class</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">gender</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">gender</span><span class="o">==</span><span class="s2">"0.47877479323721"</span><span class="p">,</span><span class="w"> </span><span class="s2">"male"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">hhkids</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">hhkids</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">hhkids</span><span class="o">==</span><span class="s2">"0.402730000731904"</span><span class="p">,</span><span class="w"> </span><span class="s2">"no"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">married</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">married</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">married</span><span class="o">==</span><span class="s2">"0.758618165849374"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">working</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">working</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">working</span><span class="o">==</span><span class="s2">"0.677047500548928"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="c1">#fixing all covariates at their mean, the "typical" person has a probability to</span><span class="w">
+</span><span class="c1">#visit a doctor of about 55%.</span><span class="w">
+
+</span><span class="c1">#replicate the data</span><span class="w">
+</span><span class="n">xbar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">do.call</span><span class="p">(</span><span class="s2">"rbind"</span><span class="p">,</span><span class="w"> </span><span class="n">replicate</span><span class="p">(</span><span class="m">111</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">simplify</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">))</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+</span><span class="n">summary</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+</span><span class="c1">#then instead of having the mean value for "education" in every row we let</span><span class="w">
+</span><span class="c1">#education run from 7 to 18 in steps of 0.1</span><span class="w">
+</span><span class="n">educ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">educ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">educ</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="c1">#all other values are fixed on a "typical" value</span><span class="w">
+
+</span><span class="c1">#then we can say again</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="c1">#and calculated probabilities for a running value of "education"</span><span class="w">
+
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">prob</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="c1">#then we can write</span><span class="w">
+</span><span class="n">dev.off</span><span class="p">()</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">prob</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">educ</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"l"</span><span class="p">,</span><span class="w"> </span><span class="n">ylim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.51</span><span class="p">,</span><span class="m">0.61</span><span class="p">),</span><span class="w"> </span><span class="n">cex.axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w">
+     </span><span class="n">cex.lab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">)</span><span class="w">
+</span><span class="c1">#and see that if education runs from 7 to 18, the probability to visit a doctor</span><span class="w">
+</span><span class="c1">#decreases from slightly above 57% to about 51%. In between the function is almost</span><span class="w">
+</span><span class="c1">#linear!</span><span class="w">
+
+
+</span><span class="c1">#the whole calculations can now be repeated for "working = no" and the line be</span><span class="w">
+</span><span class="c1">#added to our plot via</span><span class="w">
+</span><span class="n">x.matrix</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">model.matrix</span><span class="p">(</span><span class="n">logit</span><span class="p">)</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">x.matrix</span><span class="p">)</span><span class="w">
+
+</span><span class="n">xbar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">colMeans</span><span class="p">(</span><span class="n">x.matrix</span><span class="p">[,</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">9</span><span class="p">])</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="nf">class</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+
+</span><span class="n">xbar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">xbar</span><span class="p">))</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"gender"</span><span class="w">
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"hhkids"</span><span class="w">
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">7</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"married"</span><span class="w">
+</span><span class="nf">names</span><span class="p">(</span><span class="n">xbar</span><span class="p">)[</span><span class="m">8</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"working"</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="nf">class</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">gender</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">gender</span><span class="o">==</span><span class="s2">"0.47877479323721"</span><span class="p">,</span><span class="w"> </span><span class="s2">"male"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">hhkids</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">hhkids</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">hhkids</span><span class="o">==</span><span class="s2">"0.402730000731904"</span><span class="p">,</span><span class="w"> </span><span class="s2">"no"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">married</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">married</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">married</span><span class="o">==</span><span class="s2">"0.758618165849374"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">working</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">replace</span><span class="p">(</span><span class="n">xbar</span><span class="o">$</span><span class="n">working</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="o">$</span><span class="n">working</span><span class="o">==</span><span class="s2">"0.677047500548928"</span><span class="p">,</span><span class="w"> </span><span class="s2">"no"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">do.call</span><span class="p">(</span><span class="s2">"rbind"</span><span class="p">,</span><span class="w"> </span><span class="n">replicate</span><span class="p">(</span><span class="m">111</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">simplify</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">))</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+</span><span class="n">summary</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span><span class="w">
+</span><span class="n">educ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">educ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">educ</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="o">$</span><span class="n">prob</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">)</span><span class="w">
+</span><span class="n">xbar</span><span class="w">
+</span><span class="n">lines</span><span class="p">(</span><span class="n">prob</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">educ</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbar</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"l"</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"red"</span><span class="p">)</span><span class="w">
+</span><span class="n">legend</span><span class="p">(</span><span class="s2">"bottomleft"</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"working = yes"</span><span class="p">,</span><span class="w"> </span><span class="s2">"working = no"</span><span class="p">),</span><span class="w">
+       </span><span class="n">lty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"black"</span><span class="p">,</span><span class="w"> </span><span class="s2">"red"</span><span class="p">),</span><span class="w"> </span><span class="n">bty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"n"</span><span class="p">,</span><span class="w"> </span><span class="n">cex</span><span class="o">=</span><span class="m">0.7</span><span class="p">)</span><span class="w">
+</span><span class="c1">#and see that if education runs from 7 to 18, the probability to visit a doctor</span><span class="w">
+</span><span class="c1">#decreases from slightly above 57% to about 51%. In between the function is almost</span><span class="w">
+</span><span class="c1">#linear!</span><span class="w">
+
+
+</span><span class="c1">#effects plots with the effects-package</span><span class="w">
+</span><span class="c1">#install.packages("effects")</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"effects"</span><span class="p">)</span><span class="w">
+</span><span class="c1">#to use the effects plot we restrict ourselves to the logit-model and reestimate</span><span class="w">
+</span><span class="c1">#it so that R understands that "age" and "age^2" belong to one and the same</span><span class="w">
+</span><span class="c1">#variable. this is done via "poly()"</span><span class="w">
+</span><span class="n">logit.2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">poly</span><span class="p">(</span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">hhinc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">hhkids</span><span class="w"> </span><span class="o">+</span><span class="w">
+                   </span><span class="n">educ</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">married</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">working</span><span class="p">,</span><span class="w">
+                   </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"logit"</span><span class="p">),</span><span class="w">
+                   </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">)</span><span class="w">
+</span><span class="n">logit.eff</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">allEffects</span><span class="p">(</span><span class="n">logit.2</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">logit.eff</span><span class="p">,</span><span class="w"> </span><span class="n">aks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">rescale.axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">cex.axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">cex.lab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w">
+     </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="n">rug</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w">
+
+
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">## goodness of fit</span><span class="w">
+</span><span class="c1">#############</span><span class="w">
+</span><span class="c1">#McFadden R^2</span><span class="w">
+</span><span class="c1">#Calculations:</span><span class="w">
+</span><span class="c1">#evaluating the constant-only model:</span><span class="w">
+</span><span class="n">logit0</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">,</span><span class="w"> </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"logit"</span><span class="p">))</span><span class="w">
+</span><span class="n">logLik</span><span class="p">(</span><span class="n">logit0</span><span class="p">)</span><span class="w">
+</span><span class="n">probit0</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">doc</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="p">,</span><span class="w"> </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binomial</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"probit"</span><span class="p">))</span><span class="w">
+</span><span class="n">logLik</span><span class="p">(</span><span class="n">probit0</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">#the log-likelihood values from the unrestricted (full) model from above:</span><span class="w">
+</span><span class="n">logLik</span><span class="p">(</span><span class="n">logit</span><span class="p">)</span><span class="w">
+</span><span class="n">logLik</span><span class="p">(</span><span class="n">probit</span><span class="p">)</span><span class="w">
+
+
+</span><span class="n">rsq.logit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="p">(</span><span class="n">logLik</span><span class="p">(</span><span class="n">logit</span><span class="p">)</span><span class="o">/</span><span class="n">logLik</span><span class="p">(</span><span class="n">logit0</span><span class="p">)))</span><span class="w">
+</span><span class="n">rsq.logit</span><span class="w">
+</span><span class="n">rsq.probit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="p">(</span><span class="n">logLik</span><span class="p">(</span><span class="n">probit</span><span class="p">)</span><span class="o">/</span><span class="n">logLik</span><span class="p">(</span><span class="n">probit0</span><span class="p">)))</span><span class="w">
+</span><span class="n">rsq.probit</span><span class="w">
+
+
+</span><span class="c1">#Alternative Approach</span><span class="w">
+</span><span class="c1">## "Proportion of Correct Predictions"</span><span class="w">
+</span><span class="c1">#with cut-off value 50%</span><span class="w">
+</span><span class="n">conftab1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">true</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="o">$</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fitted</span><span class="p">(</span><span class="n">logit</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="c1">#Kreuztabelle</span><span class="w">
+</span><span class="c1">#confusion-Matrix mit logit</span><span class="w">
+</span><span class="n">conftab2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">true</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">healthcare1</span><span class="o">$</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fitted</span><span class="p">(</span><span class="n">probit</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="c1">#Kreuztabelle</span><span class="w">
+</span><span class="c1">#confusion-Matrix mit probit</span><span class="w">
+</span><span class="n">mtable</span><span class="p">(</span><span class="n">conftab1</span><span class="p">,</span><span class="w"> </span><span class="n">conftab2</span><span class="p">)</span><span class="w">
+</span><span class="n">toLatex</span><span class="p">(</span><span class="n">mtable</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span><span class="w"> </span><span class="n">probit</span><span class="p">))</span><span class="w">
+
+
+</span><span class="c1">#install.packages("ROCR")</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="n">ROCR</span><span class="p">)</span><span class="w">
+</span><span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">prediction</span><span class="p">(</span><span class="n">fitted</span><span class="p">(</span><span class="n">logit</span><span class="p">),</span><span class="w"> </span><span class="n">healthcare1</span><span class="o">$</span><span class="n">doc</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="s2">"acc"</span><span class="p">))</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="s2">"tpr"</span><span class="p">,</span><span class="w"> </span><span class="s2">"fpr"</span><span class="p">))</span><span class="w">
+</span><span class="n">abline</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">lty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">
+
+
+</span><span class="c1">##############</span><span class="w">
+</span><span class="c1">## LR-Test</span><span class="w">
+</span><span class="c1">##############</span><span class="w">
+</span><span class="c1">#Likelihood Ratio test: raw calculations</span><span class="w">
+</span><span class="nf">as.numeric</span><span class="p">(</span><span class="m">-2</span><span class="o">*</span><span class="p">(</span><span class="n">logLik</span><span class="p">(</span><span class="n">probit0</span><span class="p">)</span><span class="o">-</span><span class="n">logLik</span><span class="p">(</span><span class="n">probit</span><span class="p">)))</span><span class="w"> </span><span class="c1">#result: 1319 (relevant test</span><span class="w">
+</span><span class="c1">#statistic)</span><span class="w">
+</span><span class="nf">as.numeric</span><span class="p">(</span><span class="m">-2</span><span class="o">*</span><span class="p">(</span><span class="n">logLik</span><span class="p">(</span><span class="n">logit0</span><span class="p">)</span><span class="o">-</span><span class="n">logLik</span><span class="p">(</span><span class="n">logit</span><span class="p">)))</span><span class="w"> </span><span class="c1">#result: 1326</span><span class="w">
+</span><span class="n">qchisq</span><span class="p">(</span><span class="m">0.99</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">)</span><span class="w"> </span><span class="c1">#we have 8 degress of freedom</span><span class="w">
+</span><span class="c1">#-&gt; Hypothesis that the two models are the same can be rejected!</span><span class="w">
+
+
+</span><span class="c1">#LR-test with package:</span><span class="w">
+</span><span class="c1">#install.packages("lmtest")</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="n">lmtest</span><span class="p">)</span><span class="w">
+</span><span class="n">lrtest</span><span class="p">(</span><span class="n">probit0</span><span class="p">,</span><span class="w"> </span><span class="n">probit</span><span class="p">)</span><span class="w">
+</span><span class="n">lrtest</span><span class="p">(</span><span class="n">logit0</span><span class="p">,</span><span class="w"> </span><span class="n">logit</span><span class="p">)</span></code></pre></figure>
+
+<h4 id="footnotes">Footnotes</h4>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>This can be derived from
+\( E[\mathbf{y}\vert \mathbf{X}]=E[\mathbf{X\beta+\epsilon}\vert \mathbf{X}]=E[\mathbf{X\beta\vert X}]+E[\mathbf{\epsilon\vert X}]=\mathbf{X\beta}\). <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>Note that normality of the errors is not necessary for the tests
+to hold and also not part of the Gauß-Markov-assumptions. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>Generalized linear models were formulated by @nelder:72 as a way
+of unifying various other statistical models, including linear
+regression, logistic regression and Poisson regression. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>If the dispersion parameter \( \phi \) is fixed then this type of
+distributions are called an <em>exponential family</em>. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:5">
+      <p>Due to \(g(\mu_i)=\eta_i=\mathbf{x_i’\beta} \) we have
+\(\mu_i=g^{-1}(\eta_i)=g^{-1}(\mathbf{x_i’\beta}) \) where \(g^{-1} \) is
+the inverse link function. <a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:6">
+      <p>Here we denote the conditional expectation \( \mu \) as our success probability \( p \) which is  \( \in[0, 1] \). <a href="#fnref:6" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:7">
+      <p>It is important to note that \( b(.) \) is a function of \( \theta \) in
+the first place so that we have to differentiate with respect to
+\( \theta \) and not \( \mu \). <a href="#fnref:7" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:8">
+      <p>In the case of the normal distribution mean and variance are
+independent. <a href="#fnref:8" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:9">
+      <p>Details will follow below. <a href="#fnref:9" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:10">
+      <p>In the setting of GLMs the dispersion parameter \( \phi \) can be
+treated as a nuisance parameter or is known anyway. <a href="#fnref:10" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:11">
+      <p>Whereby \( F(.) \) can then be either the CDF of the normal or the logistic distribution. <a href="#fnref:11" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:12">
+      <p>Switching from "likelihood" to "densities" emphasizes the
+reversed roles of the data and the parameters (i. e., the arguments)
+and is also expressed notationally by switching from the joint
+distribution as the joint probability density for observing
+\( y_1, …, y_n \) given ( \theta \) to the <em>likelihood function</em> of the
+unknown parameter \( theta \) given a random sample \( y_1, …, y_n \). <a href="#fnref:12" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:13">
+      <p>Here write down the setup without regressors; the general considerations are the same for cases where we specifically consider regressors, i.e. for \( f(\theta; y_1, …, y_n\vert\mathbf{x}) \). <a href="#fnref:13" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:14">
+      <p>A detailed list with the variables and their description can be
+found in the accompanying R code in the
+Appendix below. <a href="#fnref:14" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:15">
+      <p>The logit model can therefore be interpreted as a
+semi-logarithmic model for the odds. <a href="#fnref:15" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:16">
+      <p>Evaluating the predicted probabilities using the probit model
+instead results in virtually no difference. <a href="#fnref:16" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:17">
+      <p>The default would be <code class="highlighter-rouge">type = "link"</code> that reports the
+corresponding value on the link-scale. <a href="#fnref:17" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:18">
+      <p>Note that these odds ratios don’t change, i.e., the remain
+constant even if we change the other regressors, whereas the
+difference on the probability scale is not the same. <a href="#fnref:18" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:19">
+      <p>Note that the calculations were made only using the logit-model.
+Applying the procedure to probit-models would result in virtually
+identical results. <a href="#fnref:19" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:20">
+      <p>The pseudo-\( R^2 \) uses the same information as the likelihood
+ratio test. <a href="#fnref:20" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:21">
+      <p>It is also possible to check for which cutoff-value the
+proportion of correct predictions is largest (see the R-Code in the Appendix below). <a href="#fnref:21" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <p>A bit of economics, data and programming.</p>
+      </div>
+
+      <div class="footer-col footer-col-2">
+
+      </div>
+
+      <div align="right" class="footer-col footer-col-3">
+        <ul class="social-media-list">
+
+          
+          <li>
+            <a href="https://github.com/himynameismarcel"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">himynameismarcel</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/marcel_kay_mav"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">marcel_kay_mav</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+    </div>
+
+
+</footer>
+
+
+  </body>
+
+</html>

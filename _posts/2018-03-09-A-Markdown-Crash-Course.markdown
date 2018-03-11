@@ -8,7 +8,7 @@ permalink: "/A-Markdown-Crash-Course"
 
 Markdown-syntax has already crossed my path both when producing reproducible reports using Jupyter and R Markdown notebooks.
 
-To check it's features a bit more comprehensively for the sake of my first blog-post (which uses Markdown for the content of each post), I decided to make an exercise out of it and go through the detailed [blog-post](https://blog.ghost.org/markdown/) found on [ghost.org](https://ghost.org/de/). The article is called [How to Write Faster, Better & Longer: The Ultimate Guide to Markdown](https://blog.ghost.org/markdown/). Below will find all the snippets that I tried out myself while going through their article:
+To check it's features a bit more comprehensively I decided to make an exercise out of it and go through a detailed blog-post that I found on [ghost.org](https://ghost.org/de/). The article is called [How to Write Faster, Better & Longer: The Ultimate Guide to Markdown](https://blog.ghost.org/markdown/). Below will find all the snippets that I tried out myself while going through their article:
 
 The *quick* brown fox, jumped **over** the lazy [dog](https://en.wikipedia.org/wiki/Dog).
 
