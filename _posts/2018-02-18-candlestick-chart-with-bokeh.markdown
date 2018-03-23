@@ -401,6 +401,8 @@ Being executed in the back-end of our flask-app, the generated variables from ou
     {%endblock%}
 {% endraw %}
 
+The final plot is embedded below:
+
 <html lang="en">
     <head>
         <meta charset="utf-8">

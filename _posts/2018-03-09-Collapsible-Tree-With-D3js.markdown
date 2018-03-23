@@ -6,6 +6,13 @@ categories: javascript
 permalink: "/Collapsible-Tree-With-D3js"
 ---
 
+A couple of weeks ago at work we were faced with the issue of how best to represent hierarchical structures, i.e., parent-child-relationships. This issue was something that I had actually been thinking about for a while already and then finally when a colleague approached me with the wish to create such visualizations, finally we decided to invest some time into how we best could implement this.
+
+In a first step, we searched for common visualizations of such relationships and fairly quickly arrived at so-called 'node-tree diagrams' (or simply 'tree diagrams'). Additionally, the trees should eventually come along with the possibility to filter for certain characteristics and thereby only select parts of the tree that the user actually filters for (but this was an issue we kept aside for the moment and focussed on the core of the problem).
+
+Because we had been working with Tableau a couple of times recently, instead of trying to implement tree-diagrams in R or Python, our choice in a first instance fell on Tableau.
+
+
 In this post I will try to describe as clearly as possible the generation of a tree-diagram using the javascript library D3.js.
 
 The reason I stumbled over this in the first place is that when diving into Tableau we had stumbled over the possibility to create node-tree diagrams. In particular, Jeffrey Shaffer pioneered the generation of such node-tree diagrams in Tableau.
@@ -180,3 +187,7 @@ function click(d) {
 }
 
 </script>
+
+
+
+[^1] Note that in the below we go through everything irrespective of the actual context of the parent-child-relationships.

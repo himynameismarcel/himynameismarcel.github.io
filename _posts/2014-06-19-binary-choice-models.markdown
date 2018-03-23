@@ -3,6 +3,7 @@ layout: post
 title:  "Binary Choice Models - Some Theory and an Application"
 date:   2014-06-19 23:37:05 +0100
 categories: economics
+tags: [econometrics, R]
 ---
 
 # Abstract

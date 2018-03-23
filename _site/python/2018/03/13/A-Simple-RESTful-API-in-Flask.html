@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>himynameismarcel</title>
-  <meta name="description" content="A bit of economics, data and programming.">
+  <title>A Simple RESTful API in Flask</title>
+  <meta name="description" content="About a year ago I familiarized myself with API’s (Application Programming Interface) and web-services more generally to get a better understanding of the te...">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/">
+  <link rel="canonical" href="http://localhost:4000/python/2018/03/13/A-Simple-RESTful-API-in-Flask.html">
   <link rel="alternate" type="application/rss+xml" title="himynameismarcel" href="/feed.xml">
 
   <link rel=”stylesheet” href=””>
@@ -71,90 +71,37 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">A Simple RESTful API in Flask</h1>
+    <p class="post-meta">
+      <time datetime="2018-03-13T13:37:05+01:00" itemprop="datePublished">
+        
+        Mar 13, 2018
+      </time>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>About a year ago I familiarized myself with <strong>API’s</strong> (<em>Application Programming Interface</em>) and <strong>web-services</strong> more generally to get a better understanding of the technological background. My conclusion back then was that the terms are used in various contexts and everyone seems to have a vague idea about what they actually mean. A very intuitive explanation that I found was given by <a href="https://medium.freecodecamp.org/what-is-an-api-in-english-please-b880a3214a82">Petr Gazarov</a> on his blog:</p>
+
+<p><em>When I think about the Web, I imagine a large network of connected servers. Every page on the internet is stored somewhere on a remote server. A remote server is not so mystical after all — it’s just a part of a remotely located computer that is optimized to process requests. When you type www.facebook.com into your browser, a request goes out to Facebook’s remote server. Once your browser receives the response, it interprets the code and displays the page. To the browser, also known as the client, Facebook’s server is an API. This means that every time you visit a page on the Web, you interact with some remote server’s API. An API isn’t the same as the remote server — rather it is the part of the server that receives requests and sends responses.</em></p>
+
+<p>So what is then the difference of an API as described above from what people actually mean when they are talking about API’s? The difference is the <em>format</em> of the request and the response.</p>
+
+<p>In the former example of facebook, a whole web page is rendered. What we actually mean when using the term API are services that return plain data that can then be easily integrated into other applications (i.e., allow A2A communication). Usually API’s return their data in <em>JSON</em>  or <em>XML</em> - format. And this data-retrieval happens via dedicated URLs (URIs) that return the respective requested responses.</p>
+
+<p>Often these requests can be executed directly via the browser but it is more common to fetch the data via the command-line (by using executables like <code class="highlighter-rouge">curl</code>) or apps like Postman or SOAP UI.</p>
+
+<p>In the last years REST (Representational State Transfer) emerged as <em>the</em> standard architectural design for webservices and web APIs. Thereby the characteristics of a REST system are defined by six ‘design’ - rules (which we will not list here in detail). The decisive factor is that the REST architecture was originally designed to fit the HTTP protocol that the ww as we know it already uses. Clients that want to retrieve data from certain end-points (resources/URIs) or store data in certain end-points simply send HTTP requests to affect a given resource in one of the common ways (GET, POST, PUT, DELETE, etc.).</p>
+
+<p>While the above all makes sense, I stumbled over <a href="https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask/page/0#comments">Miguel Grinberg’s</a> amazing tutorial that with just a few lines of code implements a simple REST API as follows:</p>
+
+  </div>
 
   
-
-
-  <ul class="post-list">
-    
-      <li>
-        
-        <span class="post-meta">Mar 16, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/programming/2018/03/16/Visualizations-using-D3js.html">Binary Choice Models - Some Theory and an Application</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Mar 13, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/python/2018/03/13/A-Simple-RESTful-API-in-Flask.html">A Simple RESTful API in Flask</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Mar 2, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/Collapsible-Tree-With-D3js">A Collapsible Tree with D3.js</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Mar 1, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/A-Markdown-Crash-Course">A Markdown Crash-Course</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Feb 19, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/python/2018/02/19/candlestick-chart-with-bokeh.html">Candlestick Chart using Python&#39;s Bokeh Library</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Sep 29, 2017</span>
-
-        <h2>
-          <a class="post-link" href="/economics/2017/09/29/Contribution-ECB-Group-of-Experts-of-Business-Registers.html">Expert Group on Business Registers, 27-29 September 2017, OECD, Paris</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jan 22, 2015</span>
-
-        <h2>
-          <a class="post-link" href="/programming/2015/01/22/numeric-integration.html">Simple Numerical Integration Techniques with Python</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jun 20, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/economics/2014/06/20/binary-choice-models.html">Binary Choice Models - Some Theory and an Application</a>
-        </h2>
-      </li>
-    
-  </ul>
-
-</div>
+</article>
 
       </div>
     </main>
