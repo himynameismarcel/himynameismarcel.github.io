@@ -763,7 +763,7 @@ $ curl -u your_username:your_password -H "Content-Type: application/json" -X POS
 
 and then again retrieve the newly updated list:
 ```raw
-$ curl -u marcel:python http://todo-api-tutorial.herokuapp.com/todo/api/v1.0/tasks
+$ curl -u your_username:your_password http://todo-api-tutorial.herokuapp.com/todo/api/v1.0/tasks
 {
   "tasks": [
     {
