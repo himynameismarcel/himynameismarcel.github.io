@@ -6,12 +6,13 @@ categories: javascript
 permalink: "/Collapsible-Tree-With-D3js"
 ---
 
-A couple of weeks ago at work we were faced with the issue of how best to represent hierarchical structures, i.e., parent-child-relationships. This issue was something that I had actually been thinking about for a while already and then finally when a colleague approached me with the wish to create such visualizations, finally we decided to invest some time into how we best could implement this.
+A couple of weeks ago at work we were faced with the issue of how best to represent hierarchical structures, i.e., parent-child-relationships. This issue was something that I had actually been thinking about for a while already and then finally when a colleague approached me with the wish to create such visualizations, finally we decided to invest some time into how we best could implement this[^1].
 
 In a first step, we searched for common visualizations of such relationships and fairly quickly arrived at so-called 'node-tree diagrams' (or simply 'tree diagrams'). Additionally, the trees should eventually come along with the possibility to filter for certain characteristics and thereby only select parts of the tree that the user actually filters for (but this was an issue we kept aside for the moment and focussed on the core of the problem).
 
 Because we had been working with Tableau a couple of times recently, instead of trying to implement tree-diagrams in R or Python, our choice in a first instance fell on Tableau.
 
+While Tableau has a rich community in the business world, in the world of software developers frequently javascript libraries like *Chart.js* or *D3.js* are heavily used and popular. It is exactly *D3.js* which caught my attention although it would require some investment into learning the syntax. But I saw a huge benefit in actually learning the syntax to create incredibly beautiful and concise visualizations. In fact, on Mike Boston's homepage, he gather a huge set of example visualizations that give you a fairly good impression of what is possible with *D3.js* and that learning it is well worth the investment.
 
 In this post I will try to describe as clearly as possible the generation of a tree-diagram using the javascript library D3.js.
 
