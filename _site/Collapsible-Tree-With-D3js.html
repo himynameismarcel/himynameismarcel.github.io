@@ -90,7 +90,11 @@
 
 <p>Because we had been working with Tableau a couple of times recently, instead of trying to implement tree-diagrams in R or Python, our choice in a first instance fell on Tableau.</p>
 
-<p>While Tableau has a rich community in the business world, in the world of software developers frequently javascript libraries like <em>Chart.js</em> or <em>D3.js</em> are heavily used and popular. It is exactly <em>D3.js</em> which caught my attention although it would require some investment into learning the syntax. But I saw a huge benefit in actually learning the syntax to create incredibly beautiful and concise visualizations. In fact, on Mike Boston’s homepage, he gather a huge set of example visualizations that give you a fairly good impression of what is possible with <em>D3.js</em> and that learning it is well worth the investment.</p>
+<p>While in the world of data science dedicated packages/libraries available in <em>R</em> (ggplot2, plotly) or <em>Python</em> (matplotlib, seaborn, ggplot, bokeh, gleam)<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> are widely used, Tableau (with almost no coding involved) has more of a usage in the business word. At the same time, there are software developers as kind of a third group distinct from classical data scientists of business analysts that also need to visualize data at some point during their work and this is where frequently javascript libraries like <em>Chart.js</em> or <em>D3.js</em> are more frequently used as tools being more well known in this domain.</p>
+
+<p>In the more recent past however, things are starting to overlap and software developers wanting to dive into the world of data science are also largely acquiring skills in tools like <em>R</em> or <em>Python</em> and data scientists are leaving their set of tools and also making more and more use of the javascript libraries we mentioned above.</p>
+
+<p>It is exactly <em>D3.js</em> which caught my attention although it would require some investment into learning the syntax. But I saw a huge benefit in actually learning the syntax to create incredibly beautiful and concise visualizations. In fact, on Mike Boston’s homepage, he gather a huge set of example visualizations that give you a fairly good impression of what is possible with <em>D3.js</em> and that learning it is well worth the investment.</p>
 
 <p>In this post I will try to describe as clearly as possible the generation of a tree-diagram using the javascript library D3.js.</p>
 
@@ -270,6 +274,9 @@ function click(d) {
   <ol>
     <li id="fn:1">
       <p>Note that in the below we go through everything irrespective of the actual context of the parent-child-relationships. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>The examples of packages/libraries we have given is just a small selection of available packages in both languages. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

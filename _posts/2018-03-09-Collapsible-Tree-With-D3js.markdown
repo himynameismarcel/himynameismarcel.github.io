@@ -12,7 +12,11 @@ In a first step, we searched for common visualizations of such relationships and
 
 Because we had been working with Tableau a couple of times recently, instead of trying to implement tree-diagrams in R or Python, our choice in a first instance fell on Tableau.
 
-While Tableau has a rich community in the business world, in the world of software developers frequently javascript libraries like *Chart.js* or *D3.js* are heavily used and popular. It is exactly *D3.js* which caught my attention although it would require some investment into learning the syntax. But I saw a huge benefit in actually learning the syntax to create incredibly beautiful and concise visualizations. In fact, on Mike Boston's homepage, he gather a huge set of example visualizations that give you a fairly good impression of what is possible with *D3.js* and that learning it is well worth the investment.
+While in the world of data science dedicated packages/libraries available in *R* (ggplot2, plotly) or *Python* (matplotlib, seaborn, ggplot, bokeh, gleam)[^2] are widely used, Tableau (with almost no coding involved) has more of a usage in the business word. At the same time, there are software developers as kind of a third group distinct from classical data scientists of business analysts that also need to visualize data at some point during their work and this is where frequently javascript libraries like *Chart.js* or *D3.js* are more frequently used as tools being more well known in this domain.
+
+In the more recent past however, things are starting to overlap and software developers wanting to dive into the world of data science are also largely acquiring skills in tools like *R* or *Python* and data scientists are leaving their set of tools and also making more and more use of the javascript libraries we mentioned above.
+
+It is exactly *D3.js* which caught my attention although it would require some investment into learning the syntax. But I saw a huge benefit in actually learning the syntax to create incredibly beautiful and concise visualizations. In fact, on Mike Boston's homepage, he gather a huge set of example visualizations that give you a fairly good impression of what is possible with *D3.js* and that learning it is well worth the investment.
 
 In this post I will try to describe as clearly as possible the generation of a tree-diagram using the javascript library D3.js.
 
@@ -192,3 +196,5 @@ function click(d) {
 
 
 [^1]: Note that in the below we go through everything irrespective of the actual context of the parent-child-relationships.
+
+[^2]: The examples of packages/libraries we have given is just a small selection of available packages in both languages.
