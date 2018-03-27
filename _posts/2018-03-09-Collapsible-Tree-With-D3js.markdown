@@ -191,4 +191,4 @@ function click(d) {
 
 
 
-[^1] Note that in the below we go through everything irrespective of the actual context of the parent-child-relationships.
+[^1]: Note that in the below we go through everything irrespective of the actual context of the parent-child-relationships.
